@@ -1,7 +1,7 @@
 ---
 title: "My Final Project Template"
-author: Your name here
-subtitle: Subtitle here if desired
+author: Jack Mernitz
+subtitle: Work in Progress
 date: today
 date-format: long
 ---
