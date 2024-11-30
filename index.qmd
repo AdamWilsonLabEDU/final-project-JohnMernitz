@@ -1,7 +1,7 @@
 ---
 title: "Analysis of Urban Tree Cover: City of Buffalo 2024"
 author: Jack Mernitz
-subtitle: Work in Progress
+subtitle: Work in Progress: Pay no attention to the man behind the curtain
 date: today
 date-format: long
 ---
@@ -27,6 +27,7 @@ Data: The underlying data are publicly accessible via the web and downloaded/acc
 You can do bullets like this:
 
 -   The first most important thing
+-   https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD
 -   The second most important thing
 -   The third most important thing
 
