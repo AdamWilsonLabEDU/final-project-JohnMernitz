@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jack Mernitz">
-<meta name="dcterms.date" content="2024-11-28">
+<meta name="dcterms.date" content="2024-11-30">
 
-<title>My Final Project Template – GEO511_FinalProject</title>
+<title>Analysis of Urban Tree Cover: City of Buffalo 2024 – GEO511_FinalProject</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">My Final Project Template</h1>
+<h1 class="title">Analysis of Urban Tree Cover: City of Buffalo 2024</h1>
 <p class="subtitle lead">Work in Progress</p>
 </div>
 
@@ -185,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 28, 2024</p>
+      <p class="date">November 30, 2024</p>
     </div>
   </div>
   
@@ -201,11 +201,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Introduction</h1>
 <p>[~ 200 words]</p>
 <p>Clearly stated background and questions / hypotheses / problems being addressed. Sets up the analysis in an interesting and compelling way. Include figures if you like.</p>
+<p>Trees are often overlooked as a component of urban spaces. With so much focus on the growth of infrastructure, living space, and work spaces, green places are left little room to grow. Tree leaf area coverage, while possibly annoying for lawn owners in the fall, is directly related to shade capacity and other environmental benefits of trees. Permeable surfaces where trees grow also reduce runoff, trees cool the surrounding air in sufficient density, and the mental and aesthetic benefits of green spaces in urban areas for residents and tourists are notable. Urban forestry bureaus seek to classify and present some of these benefits to the public. Quantifying and estimating the possible value of these services in relation to tree occurrence seemed like an interesting topic to delve into. Vacant spots and stumps of former trees do not provide benefits any longer. While an intensive endeavor to replace fully grown trees, my project seeks to enumerate how useful it could be to increase tree cover. Parsing data to assign relative values for comparable trees will assist in more accurate estimation of services. Individual versus collective benefit will also be questioned, but only after calculation of total possible benefits are calculated.</p>
 </section>
 <section id="materials-and-methods" class="level1">
 <h1>Materials and methods</h1>
 <p>[~ 200 words]</p>
 <p>Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.</p>
+<p>Publicly available data from the City of Buffalo Bureau of Forestry includes multiple categories to represent trees’ ecosystem services. Downloading and processing this data is necessary, as there are 133,230 entries in the dataset.</p>
 <p>Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.</p>
 <p>Data: The underlying data are publicly accessible via the web and downloaded/accessed within the Rmd script. If you want to use your own data, you must make it available on a website (e.g.&nbsp;Figshare) so that others are able to re-run your code.</p>
 <p>You can do bullets like this:</p>
@@ -266,74 +268,74 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">118.49</td>
-<td style="text-align: center;">-51.07</td>
-<td style="text-align: center;">9.62</td>
-<td style="text-align: center;">d</td>
-<td style="text-align: center;">-0.55</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">160.91</td>
-<td style="text-align: center;">-59.61</td>
-<td style="text-align: center;">11.13</td>
-<td style="text-align: center;">a</td>
-<td style="text-align: center;">0.42</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">15.07</td>
-<td style="text-align: center;">-22.10</td>
-<td style="text-align: center;">18.46</td>
-<td style="text-align: center;">d</td>
-<td style="text-align: center;">-0.49</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">153.70</td>
-<td style="text-align: center;">35.39</td>
-<td style="text-align: center;">17.21</td>
-<td style="text-align: center;">b</td>
-<td style="text-align: center;">-0.41</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">-46.85</td>
-<td style="text-align: center;">13.33</td>
-<td style="text-align: center;">5.30</td>
-<td style="text-align: center;">b</td>
-<td style="text-align: center;">-1.60</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">-43.93</td>
-<td style="text-align: center;">20.96</td>
-<td style="text-align: center;">13.06</td>
+<td style="text-align: center;">164.62</td>
+<td style="text-align: center;">10.46</td>
+<td style="text-align: center;">8.79</td>
 <td style="text-align: center;">e</td>
-<td style="text-align: center;">0.99</td>
+<td style="text-align: center;">-1.17</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14.10</td>
+<td style="text-align: center;">0.04</td>
+<td style="text-align: center;">9.78</td>
+<td style="text-align: center;">c</td>
+<td style="text-align: center;">1.77</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">149.22</td>
-<td style="text-align: center;">-24.97</td>
-<td style="text-align: center;">9.99</td>
+<td style="text-align: center;">92.55</td>
+<td style="text-align: center;">-55.93</td>
+<td style="text-align: center;">13.99</td>
 <td style="text-align: center;">b</td>
-<td style="text-align: center;">-1.36</td>
+<td style="text-align: center;">1.58</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">-177.66</td>
-<td style="text-align: center;">24.10</td>
-<td style="text-align: center;">8.50</td>
-<td style="text-align: center;">c</td>
-<td style="text-align: center;">-0.54</td>
+<td style="text-align: center;">-84.08</td>
+<td style="text-align: center;">18.00</td>
+<td style="text-align: center;">17.68</td>
+<td style="text-align: center;">a</td>
+<td style="text-align: center;">1.01</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">162.56</td>
-<td style="text-align: center;">-15.13</td>
-<td style="text-align: center;">5.78</td>
-<td style="text-align: center;">a</td>
-<td style="text-align: center;">0.94</td>
+<td style="text-align: center;">6.79</td>
+<td style="text-align: center;">-37.47</td>
+<td style="text-align: center;">12.72</td>
+<td style="text-align: center;">d</td>
+<td style="text-align: center;">0.13</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">150.56</td>
-<td style="text-align: center;">53.01</td>
-<td style="text-align: center;">16.93</td>
+<td style="text-align: center;">-160.61</td>
+<td style="text-align: center;">-26.49</td>
+<td style="text-align: center;">8.90</td>
 <td style="text-align: center;">c</td>
-<td style="text-align: center;">0.51</td>
+<td style="text-align: center;">0.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-51.52</td>
+<td style="text-align: center;">-49.79</td>
+<td style="text-align: center;">18.51</td>
+<td style="text-align: center;">b</td>
+<td style="text-align: center;">1.30</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">51.99</td>
+<td style="text-align: center;">58.86</td>
+<td style="text-align: center;">16.31</td>
+<td style="text-align: center;">e</td>
+<td style="text-align: center;">-0.73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">40.76</td>
+<td style="text-align: center;">-10.23</td>
+<td style="text-align: center;">14.08</td>
+<td style="text-align: center;">b</td>
+<td style="text-align: center;">-1.90</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-29.17</td>
+<td style="text-align: center;">-18.19</td>
+<td style="text-align: center;">15.38</td>
+<td style="text-align: center;">b</td>
+<td style="text-align: center;">-0.65</td>
 </tr>
 </tbody>
 </table>
@@ -355,8 +357,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addPopups</span>(<span class="sc">~</span>x[<span class="dv">2</span>], <span class="sc">~</span>y[<span class="dv">2</span>], <span class="st">"Random popup"</span>)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>m  <span class="co"># a map with the default OSM tile layer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-f3e4c67a5a0dc229f4b3" style="width:100%;height:325px;"></div>
-<script type="application/json" data-for="htmlwidget-f3e4c67a5a0dc229f4b3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[-51.07475101947784,-59.60818114690483,-22.1019917819649,35.39289001375437,13.32706321030855,20.96374201588333,-24.9660378601402,24.09768252633512,-15.12531442567706,53.01434311084449,31.79097589105368,-57.6196258328855,-32.52670646645129,25.79241072759032,44.13988346233964,14.57136137410998,-25.31234694644809,-42.05413126386702,-18.39488958008587,43.54502566158772],[118.4912463370711,160.9138010535389,15.06556495092809,153.7021191045642,-46.854905532673,-43.93184169195592,149.2189564369619,-177.6568177621812,162.5589046161622,150.5555636342615,-116.5675594098866,178.5875903069973,-117.6410063635558,20.50516488030553,-91.86118408106267,-156.7492045182735,11.52856727130711,-130.0665763299912,10.52654251456261,170.219591120258],[9.622138408012688,11.1312606651336,18.45592684112489,17.20804903539829,5.304770731600001,13.05501102586277,9.991840003058314,8.504527908517048,5.775515530258417,16.93386269849725,12.29959358111955,16.97492064442486,9.005784884793684,19.15280194487423,7.377683548256755,10.79998763045296,18.26312952092849,15.16649948433042,8.973844846477732,6.741258119000122],null,null,{"interactive":true,"className":"","stroke":true,"color":["d","a","d","b","b","e","b","c","a","c","c","a","e","d","a","c","b","a","e","e"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["d","a","d","b","b","e","b","c","a","c","c","a","e","d","a","c","b","a","e","e"],"fillOpacity":0.2},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addPopups","args":[-59.60818114690483,160.9138010535389,"Random popup",null,null,{"maxWidth":300,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"className":""}]}],"limits":{"lat":[-59.60818114690483,53.01434311084449],"lng":[-177.6568177621812,178.5875903069973]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-4543e3a59608110278a1" style="width:100%;height:325px;"></div>
+<script type="application/json" data-for="htmlwidget-4543e3a59608110278a1">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[10.46296672895551,0.03596476279199123,-55.9282663743943,18.00302378833294,-37.47331062331796,-26.49415559135377,-49.78841043077409,58.86216633953154,-10.23450409993529,-18.1910993065685,-5.630010673776269,-29.13150178268552,26.68090721592307,-59.33161793276668,26.68800571002066,38.70038467459381,-57.4413749948144,18.46329133026302,32.10292973555624,-22.9658720176667],[164.6154571138322,14.09706051461399,92.54867808893323,-84.08389700576663,6.786754662171006,-160.6125457305461,-51.51934923604131,51.99081963859499,40.75555150397122,-29.17389082722366,-8.611583914607763,17.1683878172189,32.09244042634964,-133.0566465295851,-2.775713503360748,95.07684499025345,132.7101993374527,-12.09874606691301,-103.2636956591159,-36.5295444522053],[8.790064040804282,9.779071370139718,13.99091384722851,17.67602170817554,12.72359250928275,8.89538744580932,18.50763478432782,16.30983716691844,14.08245417987928,15.378647884354,12.88893226534128,18.70077849715017,16.3167842105031,18.4749696101062,19.99342624098063,13.50600176723674,9.682021731277928,17.00051855761558,14.9174421664793,19.19242728035897],null,null,{"interactive":true,"className":"","stroke":true,"color":["e","c","b","a","d","c","b","e","b","b","a","d","b","a","b","b","d","c","c","e"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["e","c","b","a","d","c","b","e","b","b","a","d","b","a","b","b","d","c","c","e"],"fillOpacity":0.2},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addPopups","args":[0.03596476279199123,14.09706051461399,"Random popup",null,null,{"maxWidth":300,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"className":""}]}],"limits":{"lat":[-59.33161793276668,58.86216633953154],"lng":[-160.6125457305461,164.6154571138322]}},"evals":[],"jsHooks":[]}</script>
 <p>Map of completely random data</p>
 </div>
 </div>
@@ -379,8 +381,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dygraph</span>(nhtemp, <span class="at">main =</span> <span class="st">"New Haven Temperatures"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dyRangeSelector</span>(<span class="at">dateWindow =</span> <span class="fu">c</span>(<span class="st">"1920-01-01"</span>, <span class="st">"1960-01-01"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="dygraphs html-widget html-fill-item" id="htmlwidget-b94fbb26c3770df3cf80" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-b94fbb26c3770df3cf80">{"x":{"attrs":{"title":"New Haven Temperatures","labels":["year","V1"],"legend":"auto","retainDateWindow":false,"axes":{"x":{"pixelsPerLabel":60}},"showRangeSelector":true,"dateWindow":["1920-01-01T00:00:00.000Z","1960-01-01T00:00:00.000Z"],"rangeSelectorHeight":40,"rangeSelectorPlotFillColor":" #A7B1C4","rangeSelectorPlotStrokeColor":"#808FAB","interactionModel":"Dygraph.Interaction.defaultModel"},"scale":"yearly","annotations":[],"shadings":[],"events":[],"format":"date","data":[["1912-01-01T00:00:00.000Z","1913-01-01T00:00:00.000Z","1914-01-01T00:00:00.000Z","1915-01-01T00:00:00.000Z","1916-01-01T00:00:00.000Z","1917-01-01T00:00:00.000Z","1918-01-01T00:00:00.000Z","1919-01-01T00:00:00.000Z","1920-01-01T00:00:00.000Z","1921-01-01T00:00:00.000Z","1922-01-01T00:00:00.000Z","1923-01-01T00:00:00.000Z","1924-01-01T00:00:00.000Z","1925-01-01T00:00:00.000Z","1926-01-01T00:00:00.000Z","1927-01-01T00:00:00.000Z","1928-01-01T00:00:00.000Z","1929-01-01T00:00:00.000Z","1930-01-01T00:00:00.000Z","1931-01-01T00:00:00.000Z","1932-01-01T00:00:00.000Z","1933-01-01T00:00:00.000Z","1934-01-01T00:00:00.000Z","1935-01-01T00:00:00.000Z","1936-01-01T00:00:00.000Z","1937-01-01T00:00:00.000Z","1938-01-01T00:00:00.000Z","1939-01-01T00:00:00.000Z","1940-01-01T00:00:00.000Z","1941-01-01T00:00:00.000Z","1942-01-01T00:00:00.000Z","1943-01-01T00:00:00.000Z","1944-01-01T00:00:00.000Z","1945-01-01T00:00:00.000Z","1946-01-01T00:00:00.000Z","1947-01-01T00:00:00.000Z","1948-01-01T00:00:00.000Z","1949-01-01T00:00:00.000Z","1950-01-01T00:00:00.000Z","1951-01-01T00:00:00.000Z","1952-01-01T00:00:00.000Z","1953-01-01T00:00:00.000Z","1954-01-01T00:00:00.000Z","1955-01-01T00:00:00.000Z","1956-01-01T00:00:00.000Z","1957-01-01T00:00:00.000Z","1958-01-01T00:00:00.000Z","1959-01-01T00:00:00.000Z","1960-01-01T00:00:00.000Z","1961-01-01T00:00:00.000Z","1962-01-01T00:00:00.000Z","1963-01-01T00:00:00.000Z","1964-01-01T00:00:00.000Z","1965-01-01T00:00:00.000Z","1966-01-01T00:00:00.000Z","1967-01-01T00:00:00.000Z","1968-01-01T00:00:00.000Z","1969-01-01T00:00:00.000Z","1970-01-01T00:00:00.000Z","1971-01-01T00:00:00.000Z"],[49.9,52.3,49.4,51.1,49.4,47.9,49.8,50.9,49.3,51.9,50.8,49.6,49.3,50.6,48.4,50.7,50.9,50.6,51.5,52.8,51.8,51.1,49.8,50.2,50.4,51.6,51.8,50.9,48.8,51.7,51,50.6,51.7,51.5,52.1,51.3,51,54,51.4,52.7,53.1,54.6,52,52,50.9,52.6,50.2,52.6,51.6,51.9,50.5,50.9,51.7,51.4,51.7,50.8,51.9,51.8,51.9,53]]},"evals":["attrs.interactionModel"],"jsHooks":[]}</script>
+<div class="dygraphs html-widget html-fill-item" id="htmlwidget-28c3d4bffcf4ea6fe068" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-28c3d4bffcf4ea6fe068">{"x":{"attrs":{"title":"New Haven Temperatures","labels":["year","V1"],"legend":"auto","retainDateWindow":false,"axes":{"x":{"pixelsPerLabel":60}},"showRangeSelector":true,"dateWindow":["1920-01-01T00:00:00.000Z","1960-01-01T00:00:00.000Z"],"rangeSelectorHeight":40,"rangeSelectorPlotFillColor":" #A7B1C4","rangeSelectorPlotStrokeColor":"#808FAB","interactionModel":"Dygraph.Interaction.defaultModel"},"scale":"yearly","annotations":[],"shadings":[],"events":[],"format":"date","data":[["1912-01-01T00:00:00.000Z","1913-01-01T00:00:00.000Z","1914-01-01T00:00:00.000Z","1915-01-01T00:00:00.000Z","1916-01-01T00:00:00.000Z","1917-01-01T00:00:00.000Z","1918-01-01T00:00:00.000Z","1919-01-01T00:00:00.000Z","1920-01-01T00:00:00.000Z","1921-01-01T00:00:00.000Z","1922-01-01T00:00:00.000Z","1923-01-01T00:00:00.000Z","1924-01-01T00:00:00.000Z","1925-01-01T00:00:00.000Z","1926-01-01T00:00:00.000Z","1927-01-01T00:00:00.000Z","1928-01-01T00:00:00.000Z","1929-01-01T00:00:00.000Z","1930-01-01T00:00:00.000Z","1931-01-01T00:00:00.000Z","1932-01-01T00:00:00.000Z","1933-01-01T00:00:00.000Z","1934-01-01T00:00:00.000Z","1935-01-01T00:00:00.000Z","1936-01-01T00:00:00.000Z","1937-01-01T00:00:00.000Z","1938-01-01T00:00:00.000Z","1939-01-01T00:00:00.000Z","1940-01-01T00:00:00.000Z","1941-01-01T00:00:00.000Z","1942-01-01T00:00:00.000Z","1943-01-01T00:00:00.000Z","1944-01-01T00:00:00.000Z","1945-01-01T00:00:00.000Z","1946-01-01T00:00:00.000Z","1947-01-01T00:00:00.000Z","1948-01-01T00:00:00.000Z","1949-01-01T00:00:00.000Z","1950-01-01T00:00:00.000Z","1951-01-01T00:00:00.000Z","1952-01-01T00:00:00.000Z","1953-01-01T00:00:00.000Z","1954-01-01T00:00:00.000Z","1955-01-01T00:00:00.000Z","1956-01-01T00:00:00.000Z","1957-01-01T00:00:00.000Z","1958-01-01T00:00:00.000Z","1959-01-01T00:00:00.000Z","1960-01-01T00:00:00.000Z","1961-01-01T00:00:00.000Z","1962-01-01T00:00:00.000Z","1963-01-01T00:00:00.000Z","1964-01-01T00:00:00.000Z","1965-01-01T00:00:00.000Z","1966-01-01T00:00:00.000Z","1967-01-01T00:00:00.000Z","1968-01-01T00:00:00.000Z","1969-01-01T00:00:00.000Z","1970-01-01T00:00:00.000Z","1971-01-01T00:00:00.000Z"],[49.9,52.3,49.4,51.1,49.4,47.9,49.8,50.9,49.3,51.9,50.8,49.6,49.3,50.6,48.4,50.7,50.9,50.6,51.5,52.8,51.8,51.1,49.8,50.2,50.4,51.6,51.8,50.9,48.8,51.7,51,50.6,51.7,51.5,52.1,51.3,51,54,51.4,52.7,53.1,54.6,52,52,50.9,52.6,50.2,52.6,51.6,51.9,50.5,50.9,51.7,51.4,51.7,50.8,51.9,51.8,51.9,53]]},"evals":["attrs.interactionModel"],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
