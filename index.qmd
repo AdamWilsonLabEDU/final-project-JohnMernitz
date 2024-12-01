@@ -1,7 +1,7 @@
 ---
 title: "Analysis of Urban Tree Cover: City of Buffalo 2024"
 author: Jack Mernitz
-subtitle: Work in Progress, Pay no attention to the man behind the curtain
+subtitle: Work in Progress- 'Pay no attention to the man behind the curtain'
 date: today
 date-format: long
 ---
@@ -14,43 +14,15 @@ Quantifying and estimating the possible value of these services in relation to t
 
 # Materials and methods
 
-\[\~ 200 words\]
+## The Dataset
 
-Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.
+Publicly available data from the City of Buffalo Department of Public Works: Bureau of Forestry exists as a list of tree inventory within the City proper. This includes multiple categories to represent trees' ecosystem services. Downloading and processing this data is necessary, as there are 133,229 entries in the dataset. The data is organized into 28 columns, and each row is a tree site. It is a daily updated dataset existing since 2018.
 
-Publicly available data from the City of Buffalo Bureau of Forestry includes multiple categories to represent trees' ecosystem services. Downloading and processing this data is necessary, as there are 133,230 entries in the dataset.
-
-Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.
-
-Data: The underlying data are publicly accessible via the web and downloaded/accessed within the Rmd script. If you want to use your own data, you must make it available on a website (e.g. Figshare) so that others are able to re-run your code.
-
-You can do bullets like this:
-
--   The first most important thing
--   https_//data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD
--   The second most important thing
--   The third most important thing
-
-You can do numbers like this:
-
-1.  The first most important thing
-2.  The second most important thing
-3.  The third most important thing
-
-See <http://rmarkdown.rstudio.com/> for all the amazing things you can do.
-
-Here's my first code chunk.
-
-```{r}
-x=3+4
-```
-
-Refer to output in your narrative like this: x=`r x` .
-
-Load any required packages in a code chunk (you may need to install some packages):
+## Load Packages
 
 ```{r, message=F, warning=F}
 library(tidyverse)
+library(ggplot2)
 library(leaflet)
 library(kableExtra)
 library(htmlwidgets)
@@ -59,36 +31,25 @@ knitr::opts_chunk$set(widgetframe_widgets_dir = 'widgets' )
 knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling
 ```
 
-## Download and clean all required data
+## Downloading the required data
 
 ```{r}
-n=20
-data=data.frame(x=runif(n,-180,180),
-                y=runif(n,-60,60),
-                size = runif(n, 5, 20),
-                category = factor(
-                  sample(letters[1:5], n, replace = TRUE)
-                  ),
-                value = rnorm(n))
+tree_data=read.csv("https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD")
 ```
 
-```{r, results='asis'}
-data %>% 
+A sample of how the dataset is organized.
+
+```{r, code-fold: TRUE, results='asis'}
+tree_data %>% 
   slice(1:10) %>% #show only 1:n rows
   kable(digits=2,align="c")%>% #make table and round to two digits
   kable_styling(bootstrap_options = 
-                  c("striped", "hover", "condensed", "responsive")) #apply other formatting
+                  c("striped", "hover", "condensed", "responsive")) 
 ```
 
 Add any additional processing steps here.
 
 # Results
-
-\[\~200 words\]
-
-Tables and figures (maps and other graphics) are carefully planned to convey the results of your analysis. Intense exploration and evidence of many trials and failures. The author looked at the data in many different ways before coming to the final presentation of the data.
-
-Show tables, plots, etc. and describe them.
 
 ```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"}
 m <- leaflet(data) %>% 
