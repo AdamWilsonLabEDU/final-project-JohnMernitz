@@ -4,6 +4,13 @@ author: Jack Mernitz
 subtitle: Work in Progress- 'Pay no attention to the man behind the curtain'
 date: today
 date-format: long
+format:
+  html:
+    theme: spacelab
+    toc: true
+    toc-location: left
+    toc-title: "Content Sections"
+    code-fold: true
 ---
 
 # Introduction
