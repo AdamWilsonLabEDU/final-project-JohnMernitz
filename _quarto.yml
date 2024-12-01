@@ -12,8 +12,5 @@ website:
 format:
   html:
     theme: spacelab
-    code-fold: true
-    toc: true
-    toc-location: left
     includes:
         after_body: include/after_body.html
