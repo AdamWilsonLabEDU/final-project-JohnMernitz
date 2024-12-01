@@ -11,7 +11,7 @@
     "href": "index.html#download-and-clean-all-required-data",
     "title": "Analysis of Urban Tree Cover: City of Buffalo 2024",
     "section": "Download and clean all required data",
-    "text": "Download and clean all required data\n\nn=20\ndata=data.frame(x=runif(n,-180,180),\n                y=runif(n,-60,60),\n                size = runif(n, 5, 20),\n                category = factor(\n                  sample(letters[1:5], n, replace = TRUE)\n                  ),\n                value = rnorm(n))\n\ndata %&gt;% \n  slice(1:10) %&gt;% #show only 1:n rows\n  kable(digits=2,align=\"c\")%&gt;% #make table and round to two digits\n  kable_styling(bootstrap_options = \n                  c(\"striped\", \"hover\", \"condensed\", \"responsive\")) #apply other formatting\n\n\n\n\nx\ny\nsize\ncategory\nvalue\n\n\n\n\n-25.01\n-39.10\n19.96\nb\n-1.04\n\n\n-141.74\n-4.70\n16.68\nd\n0.12\n\n\n71.72\n41.07\n9.44\na\n-0.61\n\n\n-86.14\n49.92\n13.36\ne\n-1.25\n\n\n158.60\n-55.55\n10.91\na\n-0.24\n\n\n-24.04\n31.46\n15.12\na\n-0.77\n\n\n-144.41\n-59.27\n6.67\nb\n0.17\n\n\n117.80\n10.87\n10.90\nc\n-0.76\n\n\n28.19\n52.53\n7.05\nc\n0.74\n\n\n-125.71\n-48.54\n11.17\nc\n-0.59\n\n\n\n\n\n\nAdd any additional processing steps here."
+    "text": "Download and clean all required data\n\nn=20\ndata=data.frame(x=runif(n,-180,180),\n                y=runif(n,-60,60),\n                size = runif(n, 5, 20),\n                category = factor(\n                  sample(letters[1:5], n, replace = TRUE)\n                  ),\n                value = rnorm(n))\n\ndata %&gt;% \n  slice(1:10) %&gt;% #show only 1:n rows\n  kable(digits=2,align=\"c\")%&gt;% #make table and round to two digits\n  kable_styling(bootstrap_options = \n                  c(\"striped\", \"hover\", \"condensed\", \"responsive\")) #apply other formatting\n\n\n\n\nx\ny\nsize\ncategory\nvalue\n\n\n\n\n71.57\n-50.55\n14.93\nb\n-0.07\n\n\n22.15\n-23.51\n12.21\nb\n-1.07\n\n\n88.35\n45.29\n5.10\nb\n0.83\n\n\n34.44\n47.31\n10.70\na\n0.17\n\n\n-91.44\n-15.84\n18.08\na\n0.13\n\n\n-59.03\n-24.24\n8.31\nd\n0.27\n\n\n-107.87\n-19.61\n7.16\nb\n-0.17\n\n\n3.47\n-30.91\n12.88\nb\n0.34\n\n\n-97.13\n30.41\n6.16\na\n0.54\n\n\n52.40\n-14.46\n17.79\nc\n0.66\n\n\n\n\n\n\nAdd any additional processing steps here."
   },
   {
     "objectID": "data/Readme.html",
@@ -23,8 +23,15 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "About Page",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "This site is a project for the GEO 511 Spatial Data Science course directed by Adam Wilson for SUNY at Buffalo. All code used here is intended for educational purposes. Further consideration should be given to the data and analyses displayed herein should someone seek to use them."
+  },
+  {
+    "objectID": "about.html#about-this-site",
+    "href": "about.html#about-this-site",
+    "title": "About Page",
+    "section": "",
+    "text": "This site is a project for the GEO 511 Spatial Data Science course directed by Adam Wilson for SUNY at Buffalo. All code used here is intended for educational purposes. Further consideration should be given to the data and analyses displayed herein should someone seek to use them."
   }
 ]
