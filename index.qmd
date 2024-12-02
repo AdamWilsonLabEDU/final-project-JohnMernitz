@@ -118,11 +118,39 @@ treeonly_data %>%
       legend.position = "none"  # Hide the legend
     ) +
     xlab("") 
+
+top_15_counts <- treeonly_data %>%
+  count(!!sym(names(treeonly_data)[3])) %>%
+  arrange(desc(n)) %>%  # Sort by count in descending order
+  slice_max(n, n = 15)  
 ```
+Top 15 Species
+```{r}
+print(top_15_counts)
+```
+
 
 Assessment of resource values by species.
 ```{r}
+top_15_totals <- treeonly_data %>%
+  group_by(!!sym(names(treeonly_data)[3])) %>%  # Group by species
+  summarise(total = sum(!!sym(names(treeonly_data)[5]), na.rm = TRUE)) %>%  
+  arrange(desc(total)) %>%  # Sort by total in descending order
+  slice_max(total, n = 15)  # Keep only the top 15 categories by total sum
 
+# Create the bar graph for the top 15 category totals from column 5
+top_15_totals %>%
+  ggplot(aes(x = !!sym(names(top_15_totals)[1]), y = total, fill = as.factor(!!sym(names(top_15_totals)[1])))) +  # Use category for x-axis and fill by category
+  geom_bar(stat = "identity") +  # Bar graph with stat = "identity" to use the actual totals
+  geom_text(aes(label = total), angle = 90, hjust = .4, size = 5) +
+  scale_y_continuous(limits = c(0, 1300000)) +
+  theme(
+    axis.text.x = element_blank(),   # Remove x-axis tick labels
+    axis.ticks.x = element_blank()   # Remove x-axis ticks
+  ) +
+  labs(fill = "Common Name") +
+  xlab("Trees") +
+  ylab("Dollars")
 ```
 
 # Results
