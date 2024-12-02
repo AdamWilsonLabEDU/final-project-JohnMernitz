@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jack Mernitz">
-<meta name="dcterms.date" content="2024-12-01">
+<meta name="dcterms.date" content="2024-12-02">
 
 <title>Analysis of Urban Tree Cover: City of Buffalo 2024 – GEO511_FinalProject</title>
 <style>
@@ -152,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#materials-and-methods" id="toc-materials-and-methods" class="nav-link" data-scroll-target="#materials-and-methods">Materials and methods</a>
   <ul class="collapse">
   <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">The Dataset</a></li>
-  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages">Load Packages</a></li>
+  <li><a href="#install-and-load-packages" id="toc-install-and-load-packages" class="nav-link" data-scroll-target="#install-and-load-packages">Install and Load Packages</a></li>
   <li><a href="#downloading-the-required-data" id="toc-downloading-the-required-data" class="nav-link" data-scroll-target="#downloading-the-required-data">Downloading the required data</a></li>
   </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
@@ -188,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 1, 2024</p>
+      <p class="date">December 2, 2024</p>
     </div>
   </div>
   
@@ -211,19 +211,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="the-dataset">The Dataset</h2>
 <p>Publicly available data from the City of Buffalo Department of Public Works: Bureau of Forestry exists as a list of tree inventory within the City proper. This includes multiple categories to represent trees’ ecosystem services. Downloading and processing this data is necessary, as there are 133,229 entries in the dataset. The data is organized into 28 columns, and each row is a tree site. It is a daily updated dataset existing since 2018.</p>
 </section>
-<section id="load-packages" class="level2">
-<h2 class="anchored" data-anchor-id="load-packages">Load Packages</h2>
+<section id="install-and-load-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-and-load-packages">Install and Load Packages</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmlwidgets)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(widgetframe)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">widgetframe_widgets_dir =</span> <span class="st">'widgets'</span> ) </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">cache=</span><span class="cn">TRUE</span>)  <span class="co"># cache the results for quick compiling</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"mapview"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapview)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmlwidgets)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(widgetframe)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">widgetframe_widgets_dir =</span> <span class="st">'widgets'</span> ) </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">cache=</span><span class="cn">TRUE</span>)  <span class="co"># cache the results for quick compiling</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -232,14 +235,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tree_data<span class="ot">=</span><span class="fu">read.csv</span>(<span class="st">"https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>A sample of how the dataset is organized.</p>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tree_data <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> <span class="co">#show only 1:n rows</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co">#show only 1:n rows</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits=</span><span class="dv">2</span>,<span class="at">align=</span><span class="st">"c"</span>)<span class="sc">%&gt;%</span> <span class="co">#make table and round to two digits</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -429,166 +432,640 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: center;">(42.9427293622, -78.8083077456)</td>
 <td style="text-align: center;">POINT (-78.8083077456 42.9427293622)</td>
 </tr>
+</tbody>
+</table>
+</div>
+
+
+<p>Filter out ‘unsuitable vacant’ sites.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tree_suitable <span class="ot">&lt;-</span> tree_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_data[,<span class="dv">2</span>] <span class="sc">!=</span> <span class="st">"unsuitable vacant"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>tree_filtered <span class="ot">&lt;-</span> tree_suitable <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_suitable[,<span class="dv">3</span>] <span class="sc">!=</span> <span class="st">"0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Resulting data split into vacant, stump, and used sites and compared.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stump_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"STUMP"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>vacant_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"VACANT"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"STUMP"</span>, <span class="st">"VACANT"</span>)))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>stump_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Editing</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Botanical.Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Common.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">DBH</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Total.Yearly.Eco.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Gallons.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Greenhouse.CO2.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Avoided..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Sequestered..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Energy.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">kWh.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Therms.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Air.Quality.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pollutants.Saved..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Property.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Leaf.Surface.Area..in.sq..ft..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Address</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Street</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Side</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Council.District</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Park.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Latitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Longitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site.ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Location</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">536</td>
+<td style="text-align: left;">Ashland Av</td>
+<td style="text-align: left;">In_Lot</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.91953</td>
+<td style="text-align: right;">-78.87879</td>
+<td style="text-align: right;">132570</td>
+<td style="text-align: left;">(42.919531781892715, -78.87878876786303)</td>
+<td style="text-align: left;">POINT (-78.87878876786303 42.919531781892715)</td>
+</tr>
 <tr class="even">
-<td style="text-align: center;">Buffalo</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">62</td>
-<td style="text-align: center;">Harriet Av</td>
-<td style="text-align: center;">Front</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">University</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">42.92</td>
-<td style="text-align: center;">-78.80</td>
-<td style="text-align: center;">75540</td>
-<td style="text-align: center;">(42.92445067187267, -78.80342759392207)</td>
-<td style="text-align: center;">POINT (-78.80342759392207 42.92445067187267)</td>
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: left;">Ashland Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ellicott</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.90662</td>
+<td style="text-align: right;">-78.87864</td>
+<td style="text-align: right;">35187</td>
+<td style="text-align: left;">(42.9066177124141, -78.87863786259585)</td>
+<td style="text-align: left;">POINT (-78.87863786259585 42.9066177124141)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Buffalo</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">823</td>
-<td style="text-align: center;">Richmond Av</td>
-<td style="text-align: center;">Front</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">Delaware</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">42.93</td>
-<td style="text-align: center;">-78.88</td>
-<td style="text-align: center;">47917</td>
-<td style="text-align: center;">(42.92576951288427, -78.88077992805385)</td>
-<td style="text-align: center;">POINT (-78.88077992805385 42.92576951288427)</td>
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">731</td>
+<td style="text-align: left;">Main St</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ellicott</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.89372</td>
+<td style="text-align: right;">-78.87161</td>
+<td style="text-align: right;">19246</td>
+<td style="text-align: left;">(42.8937222394, -78.8716083658)</td>
+<td style="text-align: left;">POINT (-78.8716083658 42.8937222394)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">Buffalo</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">685</td>
-<td style="text-align: center;">Delavan Ave West</td>
-<td style="text-align: center;">In_Lot</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">Delaware</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">42.92</td>
-<td style="text-align: center;">-78.87</td>
-<td style="text-align: center;">50291</td>
-<td style="text-align: center;">(42.92151055062227, -78.87253565740838)</td>
-<td style="text-align: center;">POINT (-78.87253565740838 42.92151055062227)</td>
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">401</td>
+<td style="text-align: left;">Clinton St</td>
+<td style="text-align: left;">In_Lot</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ellicott</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.88178</td>
+<td style="text-align: right;">-78.85950</td>
+<td style="text-align: right;">112187</td>
+<td style="text-align: left;">(42.88177686988964, -78.8595023976145)</td>
+<td style="text-align: left;">POINT (-78.8595023976145 42.88177686988964)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">Buffalo</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">697</td>
-<td style="text-align: center;">Potomac Av</td>
-<td style="text-align: center;">Front</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">Delaware</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">42.92</td>
-<td style="text-align: center;">-78.87</td>
-<td style="text-align: center;">50081</td>
-<td style="text-align: center;">(42.924182075984085, -78.87333735368897)</td>
-<td style="text-align: center;">POINT (-78.87333735368897 42.924182075984085)</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Buffalo</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">101</td>
-<td style="text-align: center;">Linden Av</td>
-<td style="text-align: center;">Side</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">Delaware</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">42.94</td>
-<td style="text-align: center;">-78.85</td>
-<td style="text-align: center;">58316</td>
-<td style="text-align: center;">(42.943528115350155, -78.84705612700867)</td>
-<td style="text-align: center;">POINT (-78.84705612700867 42.943528115350155)</td>
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">104</td>
+<td style="text-align: left;">Memorial Dr</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Fillmore</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.89063</td>
+<td style="text-align: right;">-78.83292</td>
+<td style="text-align: right;">125762</td>
+<td style="text-align: left;">(42.8906273864, -78.83292017)</td>
+<td style="text-align: left;">POINT (-78.83292017 42.8906273864)</td>
 </tr>
 </tbody>
 </table>
 </div>
 
 
-<p>Add any additional processing steps here.</p>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>vacant_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Editing</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Botanical.Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Common.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">DBH</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Total.Yearly.Eco.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Gallons.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Greenhouse.CO2.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Avoided..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Sequestered..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Energy.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">kWh.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Therms.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Air.Quality.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pollutants.Saved..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Property.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Leaf.Surface.Area..in.sq..ft..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Address</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Street</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Side</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Council.District</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Park.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Latitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Longitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site.ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Location</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">581</td>
+<td style="text-align: left;">Eggert Rd</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94408</td>
+<td style="text-align: right;">-78.80331</td>
+<td style="text-align: right;">77081</td>
+<td style="text-align: left;">(42.9440832121, -78.8033149767)</td>
+<td style="text-align: left;">POINT (-78.8033149767 42.9440832121)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">566</td>
+<td style="text-align: left;">Suffolk St</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.93818</td>
+<td style="text-align: right;">-78.81049</td>
+<td style="text-align: right;">78267</td>
+<td style="text-align: left;">(42.938183276978, -78.81049268156329)</td>
+<td style="text-align: left;">POINT (-78.81049268156329 42.938183276978)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: left;">Edison Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.92682</td>
+<td style="text-align: right;">-78.80219</td>
+<td style="text-align: right;">78435</td>
+<td style="text-align: left;">(42.92681757161058, -78.80218892744527)</td>
+<td style="text-align: left;">POINT (-78.80218892744527 42.92681757161058)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3270</td>
+<td style="text-align: left;">Main St</td>
+<td style="text-align: left;">Median</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.95289</td>
+<td style="text-align: right;">-78.82400</td>
+<td style="text-align: right;">127122</td>
+<td style="text-align: left;">(42.952886806, -78.8240012178)</td>
+<td style="text-align: left;">POINT (-78.8240012178 42.952886806)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">442</td>
+<td style="text-align: left;">Hewitt Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94273</td>
+<td style="text-align: right;">-78.80831</td>
+<td style="text-align: right;">74565</td>
+<td style="text-align: left;">(42.9427293622, -78.8083077456)</td>
+<td style="text-align: left;">POINT (-78.8083077456 42.9427293622)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Editing</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Botanical.Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Common.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">DBH</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Total.Yearly.Eco.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Gallons.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Greenhouse.CO2.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Avoided..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Sequestered..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Energy.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">kWh.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Therms.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Air.Quality.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pollutants.Saved..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Property.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Leaf.Surface.Area..in.sq..ft..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Address</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Street</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Side</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Council.District</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Park.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Latitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Longitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site.ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Location</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Olmsted</td>
+<td style="text-align: left;">ACER RUBRUM</td>
+<td style="text-align: left;">MAPLE, RED</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Symphony Cir</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Niagara</td>
+<td style="text-align: left;">Symphony Circle</td>
+<td style="text-align: right;">42.90266</td>
+<td style="text-align: right;">-78.88228</td>
+<td style="text-align: right;">136253</td>
+<td style="text-align: left;">(42.902662454136625, -78.88228016746278)</td>
+<td style="text-align: left;">POINT (-78.88228016746278 42.902662454136625)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">TILIA CORDATA</td>
+<td style="text-align: left;">LINDEN, LITTLELEAF</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">123.24</td>
+<td style="text-align: right;">12.22</td>
+<td style="text-align: right;">1527.64</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">259.97</td>
+<td style="text-align: right;">138.13</td>
+<td style="text-align: right;">69.77</td>
+<td style="text-align: right;">105.48</td>
+<td style="text-align: right;">39.05</td>
+<td style="text-align: right;">10.30</td>
+<td style="text-align: right;">1.69</td>
+<td style="text-align: right;">29.97</td>
+<td style="text-align: right;">49.81</td>
+<td style="text-align: right;">274</td>
+<td style="text-align: left;">Saranac Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.95350</td>
+<td style="text-align: right;">-78.85738</td>
+<td style="text-align: right;">59485</td>
+<td style="text-align: left;">(42.9534962865, -78.8573827648)</td>
+<td style="text-align: left;">POINT (-78.8573827648 42.9534962865)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">CERCIDIPHYLLUM JAPONICUM</td>
+<td style="text-align: left;">KATSURATREE</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">73.02</td>
+<td style="text-align: right;">1.60</td>
+<td style="text-align: right;">199.89</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">5.09</td>
+<td style="text-align: right;">3.87</td>
+<td style="text-align: right;">19.47</td>
+<td style="text-align: right;">24.19</td>
+<td style="text-align: right;">11.42</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">51.53</td>
+<td style="text-align: right;">85.64</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">Crescent Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.92946</td>
+<td style="text-align: right;">-78.85172</td>
+<td style="text-align: right;">63798</td>
+<td style="text-align: left;">(42.92946461230632, -78.85171585637357)</td>
+<td style="text-align: left;">POINT (-78.85171585637357 42.92946461230632)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">QUERCUS BICOLOR</td>
+<td style="text-align: left;">OAK, SWAMP WHITE</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">55.98</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">109.41</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">3.43</td>
+<td style="text-align: right;">2.97</td>
+<td style="text-align: right;">12.98</td>
+<td style="text-align: right;">16.31</td>
+<td style="text-align: right;">7.60</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">41.84</td>
+<td style="text-align: right;">69.54</td>
+<td style="text-align: right;">271</td>
+<td style="text-align: left;">Depew Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94376</td>
+<td style="text-align: right;">-78.83955</td>
+<td style="text-align: right;">108743</td>
+<td style="text-align: left;">(42.943762309305306, -78.83955052023583)</td>
+<td style="text-align: left;">POINT (-78.83955052023583 42.943762309305306)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">ACER X FREEMANII</td>
+<td style="text-align: left;">MAPLE, FREEMAN</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">113.76</td>
+<td style="text-align: right;">7.49</td>
+<td style="text-align: right;">935.78</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">192.64</td>
+<td style="text-align: right;">182.04</td>
+<td style="text-align: right;">50.83</td>
+<td style="text-align: right;">78.16</td>
+<td style="text-align: right;">28.33</td>
+<td style="text-align: right;">7.42</td>
+<td style="text-align: right;">1.23</td>
+<td style="text-align: right;">46.97</td>
+<td style="text-align: right;">78.06</td>
+<td style="text-align: right;">445</td>
+<td style="text-align: left;">Winspear Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94888</td>
+<td style="text-align: right;">-78.80997</td>
+<td style="text-align: right;">76389</td>
+<td style="text-align: left;">(42.9488798638, -78.8099703381)</td>
+<td style="text-align: left;">POINT (-78.8099703381 42.9488798638)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>Species split analysis.</p>
+<p>Assessment of resource values by species.</p>
 </section>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
+<p>Rounded proportionate spread forecasted for vacant sites.</p>
 </section>
 <section id="conclusions" class="level1">
 <h1>Conclusions</h1>
