@@ -29,9 +29,11 @@ Publicly available data from the City of Buffalo Department of Public Works: Bur
 
 ```{r, message=F, warning=F, results=F}
 install.packages("mapview")
+install.packages("hrbrthemes")
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(hrbrthemes)
 library(mapview)
 library(leaflet)
 library(kableExtra)
@@ -96,10 +98,26 @@ treeonly_data %>%
                   c("striped", "hover", "condensed", "responsive"))
 ```
 
-Species split analysis.
+Species count analysis.
 
-```{r}
-
+```{r fig.width=10, fig.height=6, warning=F}
+treeonly_data %>%
+  # Count occurrences of each unique value in the third column
+  count(!!sym(names(treeonly_data)[3])) %>% 
+  arrange(n) %>%  # Sort by count
+  top_n(15, n) %>%
+  mutate(!!names(treeonly_data)[3] := factor(!!sym(names(treeonly_data)[3]), levels = unique(!!sym(names(treeonly_data)[3])))) %>%  # Factor for ordered axis
+  ggplot(aes(x = !!sym(names(treeonly_data)[3]), y = n)) +  # Use the count (n) on the y-axis
+    geom_segment(aes(x = !!sym(names(treeonly_data)[3]), xend = !!sym(names(treeonly_data)[3]), y = 0, yend = n), color = "gray") +  # Add segments
+    geom_point(size = 3, color = "#654194") +  # Add points
+    coord_flip() +  # Flip coordinates to make the plot horizontal
+    theme_ipsum() +  # Apply hrbrthemes style
+    theme(
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.position = "none"  # Hide the legend
+    ) +
+    xlab("") 
 ```
 
 Assessment of resource values by species.
