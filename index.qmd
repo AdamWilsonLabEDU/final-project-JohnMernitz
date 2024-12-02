@@ -148,7 +148,7 @@ top_15_totals %>%
     axis.text.x = element_blank(),   # Remove x-axis tick labels
     axis.ticks.x = element_blank()   # Remove x-axis ticks
   ) +
-  labs(fill = "Common Name") +
+  labs(fill = "Common Name", title = "Ecological Yearly Benefits of Top 15 Species") +
   xlab("Trees") +
   ylab("Dollars")
 ```
