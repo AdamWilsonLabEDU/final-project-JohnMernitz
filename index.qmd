@@ -25,11 +25,14 @@ Quantifying and estimating the possible value of these services in relation to t
 
 Publicly available data from the City of Buffalo Department of Public Works: Bureau of Forestry exists as a list of tree inventory within the City proper. This includes multiple categories to represent trees' ecosystem services. Downloading and processing this data is necessary, as there are 133,229 entries in the dataset. The data is organized into 28 columns, and each row is a tree site. It is a daily updated dataset existing since 2018.
 
-## Load Packages
+## Install and Load Packages
 
-```{r, message=F, warning=F}
+```{r, message=F, warning=F, results=F}
+install.packages("mapview")
 library(tidyverse)
+library(dplyr)
 library(ggplot2)
+library(mapview)
 library(leaflet)
 library(kableExtra)
 library(htmlwidgets)
@@ -41,22 +44,75 @@ knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling
 ## Downloading the required data
 
 ```{r}
-tree_data=read.csv("https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD")
+tree_data <- read.csv("https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD")
 ```
 
 A sample of how the dataset is organized.
 
-```{r, code-fold: TRUE, results='asis'}
+```{r, results='asis'}
 tree_data %>% 
-  slice(1:10) %>% #show only 1:n rows
+  slice(1:5) %>% #show only 1:n rows
   kable(digits=2,align="c")%>% #make table and round to two digits
   kable_styling(bootstrap_options = 
                   c("striped", "hover", "condensed", "responsive")) 
 ```
 
-Add any additional processing steps here.
+Filter out 'unsuitable vacant' sites.
+```{r}
+tree_suitable <- tree_data %>%
+  filter(tree_data[,2] != "unsuitable vacant")
+tree_filtered <- tree_suitable %>%
+  filter(tree_suitable[,3] != "0")
+```
+
+
+Resulting data split into vacant, stump, and used sites and compared.
+```{r}
+stump_data <- tree_filtered %>%
+  filter(tree_filtered[,2] == "STUMP")
+
+vacant_data <- tree_filtered %>%
+  filter(tree_filtered[,2] == "VACANT")
+
+treeonly_data <- tree_filtered %>%
+  filter(!(tree_filtered[,2] %in% c("STUMP", "VACANT")))
+
+stump_data %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = 
+                  c("striped", "hover", "condensed", "responsive"))
+
+vacant_data %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = 
+                  c("striped", "hover", "condensed", "responsive"))
+
+treeonly_data %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = 
+                  c("striped", "hover", "condensed", "responsive"))
+```
+
+Species split analysis.
+
+```{r}
+
+```
+
+Assessment of resource values by species.
+```{r}
+
+```
 
 # Results
+
+Rounded proportionate spread forecasted for vacant sites.
+```{r}
+
+```
 
 # Conclusions
 
