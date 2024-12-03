@@ -251,6 +251,11 @@ mapview(vacant_eco_sf, zcol = "avg_benefit", legend = TRUE)
 
 # Conclusions
 
-Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. 
+Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. Assuming everyone who has a vacant slot plants a tree (distributed from top 15), by the time they reach maturity another $7,609,962 of ecological benefits could come from those 60,000 trees every year. It would be interesting to continue this analysis for tree canopy and localized temperature data.
 
 # References
+“Bureau of Forestry | Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry.
+“Figure 4.-Urban Forest Species Composition as a Percentage of All...” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064.
+Holtz, Yan. n.d. “Dendrogram Customization with R and Ggraph.” Accessed November 30, 2024. https://www.r-graph-gallery.com/335-custom-ggraph-dendrogram.html.
+“Tree Inventory | OpenData Buffalo.” n.d. Accessed December 2, 2024. https://data.buffalony.gov/Quality-of-Life/Tree-Inventory/n4ni-uuec/about_data.
+Ziter, Carly D., Eric J. Pedersen, Christopher J. Kucharik, and Monica G. Turner. 2019. “Scale-Dependent Interactions between Tree Canopy Cover and Impervious Surfaces Reduce Daytime Urban Heat during Summer.” Proceedings of the National Academy of Sciences 116 (15): 7575–80. https://doi.org/10.1073/pnas.1817561116.
