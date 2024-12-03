@@ -184,7 +184,7 @@ reassigned_data <- sample(reassigned_data)
 
 # Adjust the length of vacant_reassigned_data to match vacant_data
 # Ensure it has exactly the same number of observations as vacant_data (60559)
-reassigned_data <- sample(vacant_reassigned_data, vacant_count, replace = TRUE)
+reassigned_data <- sample(reassigned_data, vacant_count, replace = TRUE)
 
 # Replace the "Common.Name" column (column 3) in vacant_data with reassigned species
 vacant_data$Common.Name <- reassigned_data
