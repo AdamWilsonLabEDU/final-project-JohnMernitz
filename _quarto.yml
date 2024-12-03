@@ -11,6 +11,6 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: spacelab
     includes:
         after_body: include/after_body.html

@@ -1,9 +1,7 @@
 ---
-title: "About"
+title: "About Page"
 ---
 
-About this site
+## About this site:
 
-```{r}
-1 + 1
-```
+This site is a project for the GEO 511 Spatial Data Science course directed by Adam Wilson for SUNY at Buffalo. All code used here is intended for educational purposes. Further consideration should be given to the data and analyses displayed herein should someone seek to use them.
