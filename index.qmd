@@ -280,8 +280,18 @@ vacant_eco_sf <- vacant_eco %>%
 
 # Conclusions
 
-Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. Assuming everyone who has a vacant slot plants a tree (distributed from top 15), by the time they reach maturity another `r total_ecological_benefit` of ecological benefits could come from those 60,000 trees every year. It would be interesting to continue this analysis for tree canopy and localized temperature data.
+Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. From this analysis, assuming everyone who has a vacant slot plants a tree (distributed from top 15), by the time they reach maturity another `r total_ecological_benefit` of ecological benefits could come from those 60,000 trees every year. However, that is with the assumption that all trees have the same average value, not accounting for trees of different ages or variation within species.
+
+Unfortunately this webpage's server is not powerful enough to display the 60,500 points of data (arguably a dataset too large to use for this project, in hindsight). The pre-rendered map graphic is from my personal computer, captured via screenshot. Due to the randomizing of tree assignment per vacant site, the projected ecological benefits are slightly altered but remain within the $7.6 million range. It would be interesting to continue this analysis for tree canopy coverage and localized (cooled) temperature data at street level across the city.
 
 # References
 
-“Bureau of Forestry \| Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry. “Figure 4.-Urban Forest Species Composition as a Percentage of All...” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064. Holtz, Yan. n.d. “Dendrogram Customization with R and Ggraph.” Accessed November 30, 2024. https://www.r-graph-gallery.com/335-custom-ggraph-dendrogram.html. “Tree Inventory \| OpenData Buffalo.” n.d. Accessed December 2, 2024. https://data.buffalony.gov/Quality-of-Life/Tree-Inventory/n4ni-uuec/about_data. Ziter, Carly D., Eric J. Pedersen, Christopher J. Kucharik, and Monica G. Turner. 2019. “Scale-Dependent Interactions between Tree Canopy Cover and Impervious Surfaces Reduce Daytime Urban Heat during Summer.” Proceedings of the National Academy of Sciences 116 (15): 7575–80. https://doi.org/10.1073/pnas.1817561116.
+“Bureau of Forestry \| Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry. 
+
+- “Figure 4.-Urban Forest Species Composition as a Percentage of All...” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064. 
+
+- Holtz, Yan. n.d. “Dendrogram Customization with R and Ggraph.” Accessed November 30, 2024. https://www.r-graph-gallery.com/335-custom-ggraph-dendrogram.html. 
+
+- “Tree Inventory \| OpenData Buffalo.” n.d. Accessed December 2, 2024. https://data.buffalony.gov/Quality-of-Life/Tree-Inventory/n4ni-uuec/about_data. 
+
+- Ziter, Carly D., Eric J. Pedersen, Christopher J. Kucharik, and Monica G. Turner. 2019. “Scale-Dependent Interactions between Tree Canopy Cover and Impervious Surfaces Reduce Daytime Urban Heat during Summer.” Proceedings of the National Academy of Sciences 116 (15): 7575–80. https://doi.org/10.1073/pnas.1817561116.
