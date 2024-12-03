@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jack Mernitz">
-<meta name="dcterms.date" content="2024-12-02">
+<meta name="dcterms.date" content="2024-12-03">
 
 <title>Analysis of Urban Tree Cover: City of Buffalo 2024 – GEO511_FinalProject</title>
 <style>
@@ -153,9 +153,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">The Dataset</a></li>
   <li><a href="#install-and-load-packages" id="toc-install-and-load-packages" class="nav-link" data-scroll-target="#install-and-load-packages">Install and Load Packages</a></li>
-  <li><a href="#downloading-the-required-data" id="toc-downloading-the-required-data" class="nav-link" data-scroll-target="#downloading-the-required-data">Downloading the required data</a></li>
+  <li><a href="#downloading-the-required-data" id="toc-downloading-the-required-data" class="nav-link" data-scroll-target="#downloading-the-required-data">Downloading the required data</a>
+  <ul class="collapse">
+  <li><a href="#a-sample-of-how-the-dataset-is-organized." id="toc-a-sample-of-how-the-dataset-is-organized." class="nav-link" data-scroll-target="#a-sample-of-how-the-dataset-is-organized.">A sample of how the dataset is organized.</a></li>
   </ul></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#filter-out-unsuitable-vacant-and-0-sites." id="toc-filter-out-unsuitable-vacant-and-0-sites." class="nav-link" data-scroll-target="#filter-out-unsuitable-vacant-and-0-sites.">Filter out ‘unsuitable vacant’ and ‘0’ sites.</a>
+  <ul class="collapse">
+  <li><a href="#resulting-data-split-into-vacant-stump-and-used-sites-and-compared." id="toc-resulting-data-split-into-vacant-stump-and-used-sites-and-compared." class="nav-link" data-scroll-target="#resulting-data-split-into-vacant-stump-and-used-sites-and-compared.">Resulting data split into vacant, stump, and used sites and compared.</a></li>
+  <li><a href="#species-count-analysis." id="toc-species-count-analysis." class="nav-link" data-scroll-target="#species-count-analysis.">Species count analysis.</a></li>
+  <li><a href="#top-15-species" id="toc-top-15-species" class="nav-link" data-scroll-target="#top-15-species">Top 15 Species</a></li>
+  <li><a href="#assessment-of-resource-values-by-species." id="toc-assessment-of-resource-values-by-species." class="nav-link" data-scroll-target="#assessment-of-resource-values-by-species.">Assessment of resource values by species.</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#proportionate-species-distribution-assigned-to-vacant-sites." id="toc-proportionate-species-distribution-assigned-to-vacant-sites." class="nav-link" data-scroll-target="#proportionate-species-distribution-assigned-to-vacant-sites.">Proportionate species distribution assigned to vacant sites.</a></li>
+  <li><a href="#take-totals-data-and-find-eco-value-per-tree." id="toc-take-totals-data-and-find-eco-value-per-tree." class="nav-link" data-scroll-target="#take-totals-data-and-find-eco-value-per-tree.">Take totals data and find eco value per tree.</a></li>
+  <li><a href="#total-ecological-benefit-increase" id="toc-total-ecological-benefit-increase" class="nav-link" data-scroll-target="#total-ecological-benefit-increase">Total ecological benefit increase</a></li>
+  </ul></li>
   <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
@@ -171,7 +186,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Analysis of Urban Tree Cover: City of Buffalo 2024</h1>
-<p class="subtitle lead">Work in Progress- ‘Pay no attention to the man behind the curtain’</p>
+<p class="subtitle lead">Ecological Benefits Analysis</p>
 </div>
 
 
@@ -188,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 2, 2024</p>
+      <p class="date">December 3, 2024</p>
     </div>
   </div>
   
@@ -217,18 +232,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"mapview"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"hrbrthemes"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hrbrthemes)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapview)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmlwidgets)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(widgetframe)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">widgetframe_widgets_dir =</span> <span class="st">'widgets'</span> ) </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">cache=</span><span class="cn">TRUE</span>)  <span class="co"># cache the results for quick compiling</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"webshot"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"hrbrthemes"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hrbrthemes)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapview)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(webshot)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmlwidgets)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(widgetframe)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">widgetframe_widgets_dir =</span> <span class="st">'widgets'</span> ) </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">cache=</span><span class="cn">TRUE</span>)  <span class="co"># cache the results for quick compiling</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -240,11 +257,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>A sample of how the dataset is organized.</p>
+<section id="a-sample-of-how-the-dataset-is-organized." class="level3">
+<h3 class="anchored" data-anchor-id="a-sample-of-how-the-dataset-is-organized.">A sample of how the dataset is organized.</h3>
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tree_data <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co">#show only 1:n rows</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co">#show only 1:5 rows</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits=</span><span class="dv">2</span>,<span class="at">align=</span><span class="st">"c"</span>)<span class="sc">%&gt;%</span> <span class="co">#make table and round to two digits</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -289,80 +307,80 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">581</td>
-<td style="text-align: center;">Eggert Rd</td>
-<td style="text-align: center;">Front</td>
-<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">3425</td>
+<td style="text-align: center;">Main St</td>
+<td style="text-align: center;">Median</td>
+<td style="text-align: center;">30</td>
 <td style="text-align: center;">University</td>
 <td style="text-align: center;">0</td>
-<td style="text-align: center;">42.94</td>
-<td style="text-align: center;">-78.80</td>
-<td style="text-align: center;">77081</td>
-<td style="text-align: center;">(42.9440832121, -78.8033149767)</td>
-<td style="text-align: center;">POINT (-78.8033149767 42.9440832121)</td>
+<td style="text-align: center;">42.96</td>
+<td style="text-align: center;">-78.81</td>
+<td style="text-align: center;">127564</td>
+<td style="text-align: center;">(42.9591452836, -78.8147256834751)</td>
+<td style="text-align: center;">POINT (-78.8147256834751 42.9591452836)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Buffalo</td>
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">566</td>
-<td style="text-align: center;">Suffolk St</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">38</td>
+<td style="text-align: center;">Newport Av</td>
 <td style="text-align: center;">Front</td>
 <td style="text-align: center;">1</td>
-<td style="text-align: center;">University</td>
+<td style="text-align: center;">Delaware</td>
 <td style="text-align: center;">0</td>
-<td style="text-align: center;">42.94</td>
-<td style="text-align: center;">-78.81</td>
-<td style="text-align: center;">78267</td>
-<td style="text-align: center;">(42.938183276978, -78.81049268156329)</td>
-<td style="text-align: center;">POINT (-78.81049268156329 42.938183276978)</td>
+<td style="text-align: center;">42.96</td>
+<td style="text-align: center;">-78.85</td>
+<td style="text-align: center;">61278</td>
+<td style="text-align: center;">(42.957086127982926, -78.84618244385746)</td>
+<td style="text-align: center;">POINT (-78.84618244385746 42.957086127982926)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Buffalo</td>
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">146</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">236</td>
 <td style="text-align: center;">Edison Av</td>
 <td style="text-align: center;">Front</td>
 <td style="text-align: center;">1</td>
@@ -370,103 +388,117 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">42.93</td>
 <td style="text-align: center;">-78.80</td>
-<td style="text-align: center;">78435</td>
-<td style="text-align: center;">(42.92681757161058, -78.80218892744527)</td>
-<td style="text-align: center;">POINT (-78.80218892744527 42.92681757161058)</td>
+<td style="text-align: center;">78864</td>
+<td style="text-align: center;">(42.92949598228323, -78.80215920288072)</td>
+<td style="text-align: center;">POINT (-78.80215920288072 42.92949598228323)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Buffalo</td>
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">VACANT</td>
 <td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">3270</td>
-<td style="text-align: center;">Main St</td>
-<td style="text-align: center;">Median</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">University</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">82</td>
+<td style="text-align: center;">North Park Av</td>
+<td style="text-align: center;">Front</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Delaware</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">42.95</td>
-<td style="text-align: center;">-78.82</td>
-<td style="text-align: center;">127122</td>
-<td style="text-align: center;">(42.952886806, -78.8240012178)</td>
-<td style="text-align: center;">POINT (-78.8240012178 42.952886806)</td>
+<td style="text-align: center;">-78.86</td>
+<td style="text-align: center;">60328</td>
+<td style="text-align: center;">(42.946828719486696, -78.8559488191159)</td>
+<td style="text-align: center;">POINT (-78.8559488191159 42.946828719486696)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Buffalo</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">VACANT</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">442</td>
-<td style="text-align: center;">Hewitt Av</td>
+<td style="text-align: center;">TILIA CORDATA</td>
+<td style="text-align: center;">LINDEN, LITTLELEAF</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">119.46</td>
+<td style="text-align: center;">11.58</td>
+<td style="text-align: center;">1447.65</td>
+<td style="text-align: center;">1.16</td>
+<td style="text-align: center;">280.83</td>
+<td style="text-align: center;">159.72</td>
+<td style="text-align: center;">62.69</td>
+<td style="text-align: center;">98.35</td>
+<td style="text-align: center;">34.74</td>
+<td style="text-align: center;">10.47</td>
+<td style="text-align: center;">1.75</td>
+<td style="text-align: center;">33.55</td>
+<td style="text-align: center;">55.77</td>
+<td style="text-align: center;">1550</td>
+<td style="text-align: center;">Kensington Av</td>
 <td style="text-align: center;">Front</td>
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">University</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">42.94</td>
-<td style="text-align: center;">-78.81</td>
-<td style="text-align: center;">74565</td>
-<td style="text-align: center;">(42.9427293622, -78.8083077456)</td>
-<td style="text-align: center;">POINT (-78.8083077456 42.9427293622)</td>
+<td style="text-align: center;">-78.80</td>
+<td style="text-align: center;">77077</td>
+<td style="text-align: center;">(42.94382567698975, -78.79951059464187)</td>
+<td style="text-align: center;">POINT (-78.79951059464187 42.94382567698975)</td>
 </tr>
 </tbody>
 </table>
 </div>
 
 
-<p>Filter out ‘unsuitable vacant’ sites.</p>
+</section>
+</section>
+<section id="filter-out-unsuitable-vacant-and-0-sites." class="level2">
+<h2 class="anchored" data-anchor-id="filter-out-unsuitable-vacant-and-0-sites.">Filter out ‘unsuitable vacant’ and ‘0’ sites.</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tree_suitable <span class="ot">&lt;-</span> tree_data <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_data[,<span class="dv">2</span>] <span class="sc">!=</span> <span class="st">"unsuitable vacant"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>tree_filtered <span class="ot">&lt;-</span> tree_suitable <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_suitable[,<span class="dv">3</span>] <span class="sc">!=</span> <span class="st">"0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>tree_filtered <span class="ot">&lt;-</span> tree_suitable <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_suitable[,<span class="dv">3</span>] <span class="sc">!=</span> <span class="st">"0"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"The length of tree_filtered is "</span>, <span class="fu">nrow</span>(tree_data) <span class="sc">-</span> <span class="fu">nrow</span>(tree_filtered), <span class="st">"rows smaller."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "The length of tree_filtered is  566 rows smaller."</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tree_data)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tree_suitable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Resulting data split into vacant, stump, and used sites and compared.</p>
+<section id="resulting-data-split-into-vacant-stump-and-used-sites-and-compared." class="level3">
+<h3 class="anchored" data-anchor-id="resulting-data-split-into-vacant-stump-and-used-sites-and-compared.">Resulting data split into vacant, stump, and used sites and compared.</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stump_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"STUMP"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>vacant_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"VACANT"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"STUMP"</span>, <span class="st">"VACANT"</span>)))</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>stump_data <span class="sc">%&gt;%</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>stump_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"STUMP"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>vacant_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">==</span> <span class="st">"VACANT"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="ot">&lt;-</span> tree_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(tree_filtered[,<span class="dv">2</span>] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"STUMP"</span>, <span class="st">"VACANT"</span>)))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>stump_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -504,155 +536,155 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">Buffalo</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: right;">42</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">536</td>
-<td style="text-align: left;">Ashland Av</td>
-<td style="text-align: left;">In_Lot</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Delaware</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">42.91953</td>
-<td style="text-align: right;">-78.87879</td>
-<td style="text-align: right;">132570</td>
-<td style="text-align: left;">(42.919531781892715, -78.87878876786303)</td>
-<td style="text-align: left;">POINT (-78.87878876786303 42.919531781892715)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Buffalo</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: right;">39</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">63</td>
-<td style="text-align: left;">Ashland Av</td>
-<td style="text-align: left;">Front</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Ellicott</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">42.90662</td>
-<td style="text-align: right;">-78.87864</td>
-<td style="text-align: right;">35187</td>
-<td style="text-align: left;">(42.9066177124141, -78.87863786259585)</td>
-<td style="text-align: left;">POINT (-78.87863786259585 42.9066177124141)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Buffalo</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">731</td>
-<td style="text-align: left;">Main St</td>
-<td style="text-align: left;">Front</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Ellicott</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">42.89372</td>
-<td style="text-align: right;">-78.87161</td>
-<td style="text-align: right;">19246</td>
-<td style="text-align: left;">(42.8937222394, -78.8716083658)</td>
-<td style="text-align: left;">POINT (-78.8716083658 42.8937222394)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Buffalo</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: left;">STUMP</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">401</td>
-<td style="text-align: left;">Clinton St</td>
-<td style="text-align: left;">In_Lot</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Ellicott</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">42.88178</td>
-<td style="text-align: right;">-78.85950</td>
-<td style="text-align: right;">112187</td>
-<td style="text-align: left;">(42.88177686988964, -78.8595023976145)</td>
-<td style="text-align: left;">POINT (-78.8595023976145 42.88177686988964)</td>
-</tr>
 <tr class="odd">
 <td style="text-align: left;">Buffalo</td>
 <td style="text-align: left;">STUMP</td>
 <td style="text-align: left;">STUMP</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">104</td>
-<td style="text-align: left;">Memorial Dr</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: left;">Woodward Av</td>
 <td style="text-align: left;">Front</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: left;">Fillmore</td>
+<td style="text-align: left;">Delaware</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.89063</td>
-<td style="text-align: right;">-78.83292</td>
-<td style="text-align: right;">125762</td>
-<td style="text-align: left;">(42.8906273864, -78.83292017)</td>
-<td style="text-align: left;">POINT (-78.83292017 42.8906273864)</td>
+<td style="text-align: right;">42.93081</td>
+<td style="text-align: right;">-78.85225</td>
+<td style="text-align: right;">63686</td>
+<td style="text-align: left;">(42.93080750907032, -78.85224958805547)</td>
+<td style="text-align: left;">POINT (-78.85224958805547 42.93080750907032)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">190.60</td>
+<td style="text-align: right;">19.87</td>
+<td style="text-align: right;">2483.52</td>
+<td style="text-align: right;">1.25</td>
+<td style="text-align: right;">242.07</td>
+<td style="text-align: right;">175.77</td>
+<td style="text-align: right;">104.76</td>
+<td style="text-align: right;">161.08</td>
+<td style="text-align: right;">58.37</td>
+<td style="text-align: right;">11.10</td>
+<td style="text-align: right;">1.73</td>
+<td style="text-align: right;">53.63</td>
+<td style="text-align: right;">89.13</td>
+<td style="text-align: right;">615</td>
+<td style="text-align: left;">Colvin Av</td>
+<td style="text-align: left;">Side</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.95783</td>
+<td style="text-align: right;">-78.85824</td>
+<td style="text-align: right;">54697</td>
+<td style="text-align: left;">(42.957833330092306, -78.85824354314708)</td>
+<td style="text-align: left;">POINT (-78.85824354314708 42.957833330092306)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">1202</td>
+<td style="text-align: left;">Delavan Ave East</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.92276</td>
+<td style="text-align: right;">-78.81230</td>
+<td style="text-align: right;">78717</td>
+<td style="text-align: left;">(42.9227567598, -78.8123037118)</td>
+<td style="text-align: left;">POINT (-78.8123037118 42.9227567598)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">79.58</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">70.75</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">5.79</td>
+<td style="text-align: right;">1.41</td>
+<td style="text-align: right;">22.58</td>
+<td style="text-align: right;">27.53</td>
+<td style="text-align: right;">13.29</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">56.15</td>
+<td style="text-align: right;">93.31</td>
+<td style="text-align: right;">101</td>
+<td style="text-align: left;">Parkside Av</td>
+<td style="text-align: left;">Side</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.93272</td>
+<td style="text-align: right;">-78.85155</td>
+<td style="text-align: right;">63541</td>
+<td style="text-align: left;">(42.932716811397306, -78.85155353840638)</td>
+<td style="text-align: left;">POINT (-78.85155353840638 42.932716811397306)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: left;">STUMP</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">618</td>
+<td style="text-align: left;">Potomac Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.92429</td>
+<td style="text-align: right;">-78.87463</td>
+<td style="text-align: right;">50019</td>
+<td style="text-align: left;">(42.924286768454024, -78.87463349146913)</td>
+<td style="text-align: left;">POINT (-78.87463349146913 42.924286768454024)</td>
 </tr>
 </tbody>
 </table>
@@ -662,11 +694,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>vacant_data <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>vacant_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -722,17 +754,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">581</td>
-<td style="text-align: left;">Eggert Rd</td>
-<td style="text-align: left;">Front</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">3425</td>
+<td style="text-align: left;">Main St</td>
+<td style="text-align: left;">Median</td>
+<td style="text-align: right;">30</td>
 <td style="text-align: left;">University</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.94408</td>
-<td style="text-align: right;">-78.80331</td>
-<td style="text-align: right;">77081</td>
-<td style="text-align: left;">(42.9440832121, -78.8033149767)</td>
-<td style="text-align: left;">POINT (-78.8033149767 42.9440832121)</td>
+<td style="text-align: right;">42.95915</td>
+<td style="text-align: right;">-78.81473</td>
+<td style="text-align: right;">127564</td>
+<td style="text-align: left;">(42.9591452836, -78.8147256834751)</td>
+<td style="text-align: left;">POINT (-78.8147256834751 42.9591452836)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Buffalo</td>
@@ -752,17 +784,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">566</td>
-<td style="text-align: left;">Suffolk St</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">Newport Av</td>
 <td style="text-align: left;">Front</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: left;">University</td>
+<td style="text-align: left;">Delaware</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.93818</td>
-<td style="text-align: right;">-78.81049</td>
-<td style="text-align: right;">78267</td>
-<td style="text-align: left;">(42.938183276978, -78.81049268156329)</td>
-<td style="text-align: left;">POINT (-78.81049268156329 42.938183276978)</td>
+<td style="text-align: right;">42.95709</td>
+<td style="text-align: right;">-78.84618</td>
+<td style="text-align: right;">61278</td>
+<td style="text-align: left;">(42.957086127982926, -78.84618244385746)</td>
+<td style="text-align: left;">POINT (-78.84618244385746 42.957086127982926)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Buffalo</td>
@@ -782,17 +814,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">146</td>
+<td style="text-align: right;">236</td>
 <td style="text-align: left;">Edison Av</td>
 <td style="text-align: left;">Front</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">University</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.92682</td>
-<td style="text-align: right;">-78.80219</td>
-<td style="text-align: right;">78435</td>
-<td style="text-align: left;">(42.92681757161058, -78.80218892744527)</td>
-<td style="text-align: left;">POINT (-78.80218892744527 42.92681757161058)</td>
+<td style="text-align: right;">42.92950</td>
+<td style="text-align: right;">-78.80216</td>
+<td style="text-align: right;">78864</td>
+<td style="text-align: left;">(42.92949598228323, -78.80215920288072)</td>
+<td style="text-align: left;">POINT (-78.80215920288072 42.92949598228323)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Buffalo</td>
@@ -812,17 +844,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">3270</td>
-<td style="text-align: left;">Main St</td>
-<td style="text-align: left;">Median</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: left;">University</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: left;">North Park Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.95289</td>
-<td style="text-align: right;">-78.82400</td>
-<td style="text-align: right;">127122</td>
-<td style="text-align: left;">(42.952886806, -78.8240012178)</td>
-<td style="text-align: left;">POINT (-78.8240012178 42.952886806)</td>
+<td style="text-align: right;">42.94683</td>
+<td style="text-align: right;">-78.85595</td>
+<td style="text-align: right;">60328</td>
+<td style="text-align: left;">(42.946828719486696, -78.8559488191159)</td>
+<td style="text-align: left;">POINT (-78.8559488191159 42.946828719486696)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Buffalo</td>
@@ -842,17 +874,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">442</td>
-<td style="text-align: left;">Hewitt Av</td>
-<td style="text-align: left;">Front</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">University</td>
+<td style="text-align: right;">277</td>
+<td style="text-align: left;">Woodbridge Av</td>
+<td style="text-align: left;">Side</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Delaware</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.94273</td>
-<td style="text-align: right;">-78.80831</td>
-<td style="text-align: right;">74565</td>
-<td style="text-align: left;">(42.9427293622, -78.8083077456)</td>
-<td style="text-align: left;">POINT (-78.8083077456 42.9427293622)</td>
+<td style="text-align: right;">42.94531</td>
+<td style="text-align: right;">-78.84390</td>
+<td style="text-align: right;">69685</td>
+<td style="text-align: left;">(42.945309925, -78.8439030519)</td>
+<td style="text-align: left;">POINT (-78.8439030519 42.945309925)</td>
 </tr>
 </tbody>
 </table>
@@ -862,11 +894,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -905,66 +937,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Olmsted</td>
-<td style="text-align: left;">ACER RUBRUM</td>
-<td style="text-align: left;">MAPLE, RED</td>
-<td style="text-align: right;">16</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">Symphony Cir</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">Niagara</td>
-<td style="text-align: left;">Symphony Circle</td>
-<td style="text-align: right;">42.90266</td>
-<td style="text-align: right;">-78.88228</td>
-<td style="text-align: right;">136253</td>
-<td style="text-align: left;">(42.902662454136625, -78.88228016746278)</td>
-<td style="text-align: left;">POINT (-78.88228016746278 42.902662454136625)</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">Buffalo</td>
 <td style="text-align: left;">TILIA CORDATA</td>
 <td style="text-align: left;">LINDEN, LITTLELEAF</td>
-<td style="text-align: right;">19</td>
-<td style="text-align: right;">123.24</td>
-<td style="text-align: right;">12.22</td>
-<td style="text-align: right;">1527.64</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">259.97</td>
-<td style="text-align: right;">138.13</td>
-<td style="text-align: right;">69.77</td>
-<td style="text-align: right;">105.48</td>
-<td style="text-align: right;">39.05</td>
-<td style="text-align: right;">10.30</td>
-<td style="text-align: right;">1.69</td>
-<td style="text-align: right;">29.97</td>
-<td style="text-align: right;">49.81</td>
-<td style="text-align: right;">274</td>
-<td style="text-align: left;">Saranac Av</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">119.46</td>
+<td style="text-align: right;">11.58</td>
+<td style="text-align: right;">1447.65</td>
+<td style="text-align: right;">1.16</td>
+<td style="text-align: right;">280.83</td>
+<td style="text-align: right;">159.72</td>
+<td style="text-align: right;">62.69</td>
+<td style="text-align: right;">98.35</td>
+<td style="text-align: right;">34.74</td>
+<td style="text-align: right;">10.47</td>
+<td style="text-align: right;">1.75</td>
+<td style="text-align: right;">33.55</td>
+<td style="text-align: right;">55.77</td>
+<td style="text-align: right;">1550</td>
+<td style="text-align: left;">Kensington Av</td>
 <td style="text-align: left;">Front</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">University</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.95350</td>
-<td style="text-align: right;">-78.85738</td>
-<td style="text-align: right;">59485</td>
-<td style="text-align: left;">(42.9534962865, -78.8573827648)</td>
-<td style="text-align: left;">POINT (-78.8573827648 42.9534962865)</td>
+<td style="text-align: right;">42.94383</td>
+<td style="text-align: right;">-78.79951</td>
+<td style="text-align: right;">77077</td>
+<td style="text-align: left;">(42.94382567698975, -78.79951059464187)</td>
+<td style="text-align: left;">POINT (-78.79951059464187 42.94382567698975)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Buffalo</td>
 <td style="text-align: left;">CERCIDIPHYLLUM JAPONICUM</td>
 <td style="text-align: left;">KATSURATREE</td>
@@ -994,65 +996,95 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">(42.92946461230632, -78.85171585637357)</td>
 <td style="text-align: left;">POINT (-78.85171585637357 42.92946461230632)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Buffalo</td>
-<td style="text-align: left;">QUERCUS BICOLOR</td>
-<td style="text-align: left;">OAK, SWAMP WHITE</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">55.98</td>
-<td style="text-align: right;">0.88</td>
-<td style="text-align: right;">109.41</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">3.43</td>
-<td style="text-align: right;">2.97</td>
-<td style="text-align: right;">12.98</td>
-<td style="text-align: right;">16.31</td>
-<td style="text-align: right;">7.60</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">41.84</td>
-<td style="text-align: right;">69.54</td>
-<td style="text-align: right;">271</td>
-<td style="text-align: left;">Depew Av</td>
-<td style="text-align: left;">Front</td>
+<td style="text-align: left;">ULMUS X</td>
+<td style="text-align: left;">ELM, HYBRID</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">214.82</td>
+<td style="text-align: right;">7.74</td>
+<td style="text-align: right;">967.55</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">30.76</td>
+<td style="text-align: right;">26.90</td>
+<td style="text-align: right;">95.32</td>
+<td style="text-align: right;">146.18</td>
+<td style="text-align: right;">53.15</td>
+<td style="text-align: right;">2.27</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">109.33</td>
+<td style="text-align: right;">181.71</td>
+<td style="text-align: right;">2182</td>
+<td style="text-align: left;">Delaware Av</td>
+<td style="text-align: left;">Rear</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">Delaware</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.94376</td>
-<td style="text-align: right;">-78.83955</td>
-<td style="text-align: right;">108743</td>
-<td style="text-align: left;">(42.943762309305306, -78.83955052023583)</td>
-<td style="text-align: left;">POINT (-78.83955052023583 42.943762309305306)</td>
+<td style="text-align: right;">42.93121</td>
+<td style="text-align: right;">-78.87571</td>
+<td style="text-align: right;">109161</td>
+<td style="text-align: left;">(42.93121326991395, -78.87570957866497)</td>
+<td style="text-align: left;">POINT (-78.87570957866497 42.93121326991395)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">CARPINUS BETULUS</td>
+<td style="text-align: left;">HORNBEAM, EUROPEAN</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">119.56</td>
+<td style="text-align: right;">4.93</td>
+<td style="text-align: right;">615.67</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">21.16</td>
+<td style="text-align: right;">9.89</td>
+<td style="text-align: right;">63.59</td>
+<td style="text-align: right;">100.57</td>
+<td style="text-align: right;">35.15</td>
+<td style="text-align: right;">1.43</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">49.54</td>
+<td style="text-align: right;">82.33</td>
+<td style="text-align: right;">1394</td>
+<td style="text-align: left;">Kensington Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94173</td>
+<td style="text-align: right;">-78.80469</td>
+<td style="text-align: right;">77327</td>
+<td style="text-align: left;">(42.94173251146808, -78.80468705024722)</td>
+<td style="text-align: left;">POINT (-78.80468705024722 42.94173251146808)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Buffalo</td>
 <td style="text-align: left;">ACER X FREEMANII</td>
 <td style="text-align: left;">MAPLE, FREEMAN</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">113.76</td>
-<td style="text-align: right;">7.49</td>
-<td style="text-align: right;">935.78</td>
-<td style="text-align: right;">1.05</td>
-<td style="text-align: right;">192.64</td>
-<td style="text-align: right;">182.04</td>
-<td style="text-align: right;">50.83</td>
-<td style="text-align: right;">78.16</td>
-<td style="text-align: right;">28.33</td>
-<td style="text-align: right;">7.42</td>
-<td style="text-align: right;">1.23</td>
-<td style="text-align: right;">46.97</td>
-<td style="text-align: right;">78.06</td>
-<td style="text-align: right;">445</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">144.65</td>
+<td style="text-align: right;">10.13</td>
+<td style="text-align: right;">1266.23</td>
+<td style="text-align: right;">1.44</td>
+<td style="text-align: right;">246.85</td>
+<td style="text-align: right;">255.02</td>
+<td style="text-align: right;">63.40</td>
+<td style="text-align: right;">100.16</td>
+<td style="text-align: right;">35.06</td>
+<td style="text-align: right;">9.54</td>
+<td style="text-align: right;">1.58</td>
+<td style="text-align: right;">60.14</td>
+<td style="text-align: right;">99.95</td>
+<td style="text-align: right;">509</td>
 <td style="text-align: left;">Winspear Av</td>
 <td style="text-align: left;">Front</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">University</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">42.94888</td>
-<td style="text-align: right;">-78.80997</td>
-<td style="text-align: right;">76389</td>
-<td style="text-align: left;">(42.9488798638, -78.8099703381)</td>
-<td style="text-align: left;">POINT (-78.8099703381 42.9488798638)</td>
+<td style="text-align: right;">42.94886</td>
+<td style="text-align: right;">-78.80759</td>
+<td style="text-align: right;">76408</td>
+<td style="text-align: left;">(42.9488612319, -78.8075881843)</td>
+<td style="text-align: left;">POINT (-78.8075881843 42.9488612319)</td>
 </tr>
 </tbody>
 </table>
@@ -1060,28 +1092,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tree_filtered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<p>Species count analysis.</p>
+</section>
+<section id="species-count-analysis." class="level3">
+<h3 class="anchored" data-anchor-id="species-count-analysis.">Species count analysis.</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Count occurrences of each unique value in the third column</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n) <span class="sc">%&gt;%</span>  <span class="co"># Sort by count</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">15</span>, n) <span class="sc">%&gt;%</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="sc">!!</span><span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>] <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">levels =</span> <span class="fu">unique</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])))) <span class="sc">%&gt;%</span>  <span class="co"># Factor for ordered axis</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">y =</span> n)) <span class="sc">+</span>  <span class="co"># Use the count (n) on the y-axis</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">xend =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> n), <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span>  <span class="co"># Add segments</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#654194"</span>) <span class="sc">+</span>  <span class="co"># Add points</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span>  <span class="co"># Flip coordinates to make the plot horizontal</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_ipsum</span>() <span class="sc">+</span>  <span class="co"># Apply hrbrthemes style</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span>  <span class="co"># Hide the legend</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">""</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>treeonly_data <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Count occurrences of each tree species col3</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n) <span class="sc">%&gt;%</span>  <span class="co"># Sort by count</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">15</span>, n) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="sc">!!</span><span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>] <span class="sc">:</span><span class="er">=</span> <span class="fu">factor</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">levels =</span> <span class="fu">unique</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])))) <span class="sc">%&gt;%</span>  <span class="co"># Factor for ordered axis</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">y =</span> n)) <span class="sc">+</span>  <span class="co"># Use the count (n) on the y-axis</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">xend =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>]), <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> n), <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span>  <span class="co"># Add segments (bars)</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#654194"</span>) <span class="sc">+</span>  <span class="co"># Add points (dots)</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span>  <span class="co"># Flip coordinates to make the plot horizontal (lolipop graph)</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_ipsum</span>() <span class="sc">+</span>  <span class="co"># Apply hrbrthemes style</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span>  <span class="co"># Hide the legend</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">""</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1092,60 +1130,81 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>top_15_counts <span class="ot">&lt;-</span> treeonly_data <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])) <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span>  <span class="co"># Sort by count in descending order</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">15</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>top_15_counts <span class="ot">&lt;-</span> treeonly_data <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span>  <span class="co"># Sort by count in descending order</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">15</span>)  </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#sum of 15 greatest</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>total_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(top_15_counts<span class="sc">$</span>n)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the proportion column</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>top_15_counts <span class="ot">&lt;-</span> top_15_counts <span class="sc">%&gt;%</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion =</span> n <span class="sc">/</span> total_count)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>portion_total <span class="ot">&lt;-</span> total_count<span class="sc">/</span><span class="dv">70163</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Top 15 Species</p>
+</section>
+<section id="top-15-species" class="level3">
+<h3 class="anchored" data-anchor-id="top-15-species">Top 15 Species</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(top_15_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(top_15_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>                Common.Name    n
-1             MAPLE, NORWAY 8837
-2        LINDEN, LITTLELEAF 8330
-3             MAPLE, SILVER 4266
-4                MAPLE, RED 2390
-5              MAPLE, HEDGE 2291
-6       MAPLE, CRIMSON KING 1795
-7         LILAC, IVORY SILK 1703
-8               HONEYLOCUST 1539
-9    ELM, CHRISTINE BUISMAN 1526
-10                CRABAPPLE 1478
-11 MAPLE, DEBORAH SCHWEDLER 1410
-12         LONDON PLANETREE 1333
-13            PEAR, CALLERY 1268
-14         OAK, SWAMP WHITE 1221
-15          LINDEN, CRIMEAN 1205</code></pre>
+<pre><code>                Common.Name    n proportion
+1             MAPLE, NORWAY 8837 0.21770300
+2        LINDEN, LITTLELEAF 8330 0.20521285
+3             MAPLE, SILVER 4266 0.10509460
+4                MAPLE, RED 2390 0.05887860
+5              MAPLE, HEDGE 2291 0.05643969
+6       MAPLE, CRIMSON KING 1795 0.04422054
+7         LILAC, IVORY SILK 1703 0.04195408
+8               HONEYLOCUST 1539 0.03791387
+9    ELM, CHRISTINE BUISMAN 1526 0.03759361
+10                CRABAPPLE 1479 0.03643575
+11 MAPLE, DEBORAH SCHWEDLER 1409 0.03471127
+12         LONDON PLANETREE 1333 0.03283898
+13            PEAR, CALLERY 1268 0.03123768
+14         OAK, SWAMP WHITE 1221 0.03007982
+15          LINDEN, CRIMEAN 1205 0.02968565</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(portion_total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5785385</code></pre>
 </div>
 </div>
-<p>Assessment of resource values by species.</p>
+<p>From this, we can also see the top 15 species only make up 57.8% of the total tree count.</p>
+</section>
+<section id="assessment-of-resource-values-by-species." class="level3">
+<h3 class="anchored" data-anchor-id="assessment-of-resource-values-by-species.">Assessment of resource values by species.</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>top_15_totals <span class="ot">&lt;-</span> treeonly_data <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])) <span class="sc">%&gt;%</span>  <span class="co"># Group by species</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">5</span>]), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span>  </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total)) <span class="sc">%&gt;%</span>  <span class="co"># Sort by total in descending order</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(total, <span class="at">n =</span> <span class="dv">15</span>)  <span class="co"># Keep only the top 15 categories by total sum</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the bar graph for the top 15 category totals from column 5</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>top_15_totals <span class="sc">%&gt;%</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(top_15_totals)[<span class="dv">1</span>]), <span class="at">y =</span> total, <span class="at">fill =</span> <span class="fu">as.factor</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(top_15_totals)[<span class="dv">1</span>])))) <span class="sc">+</span>  <span class="co"># Use category for x-axis and fill by category</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span>  <span class="co"># Bar graph with stat = "identity" to use the actual totals</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> total), <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">4</span>, <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1300000</span>)) <span class="sc">+</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),   <span class="co"># Remove x-axis tick labels</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()   <span class="co"># Remove x-axis ticks</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Common Name"</span>, <span class="at">title =</span> <span class="st">"Ecological Yearly Benefits of Top 15 Species"</span>) <span class="sc">+</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Trees"</span>) <span class="sc">+</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Dollars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>top_eco <span class="ot">&lt;-</span> treeonly_data <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])) <span class="sc">%&gt;%</span>  <span class="co"># Group by species</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">5</span>]), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total)) <span class="sc">%&gt;%</span>  <span class="co"># Sort by total value in descending order</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(total, <span class="at">n =</span> <span class="dv">15</span>)  <span class="co"># Keep top 15 categories by total sum</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar graph for top totals from column 5</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>top_eco <span class="sc">%&gt;%</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(top_eco)[<span class="dv">1</span>]), <span class="at">y =</span> total, <span class="at">fill =</span> <span class="fu">as.factor</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(top_eco)[<span class="dv">1</span>])))) <span class="sc">+</span>  <span class="co"># Use category for x-axis and fill by category</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span>  <span class="co"># Bar graph with stat = "identity" to use the actual totals</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> total), <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> .<span class="dv">4</span>, <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1300000</span>)) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),   <span class="co"># Remove x-axis tick labels</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()   <span class="co"># Remove x-axis ticks</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Common Name"</span>, <span class="at">title =</span> <span class="st">"Ecological Yearly Benefits of Top 15 Species"</span>) <span class="sc">+</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Trees"</span>) <span class="sc">+</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Benefits in Dollars"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1155,17 +1214,543 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>This shows the most ecologically beneficial tree species and their associated value. We’ll also assume people do not want to go to the trouble of removing stumps first, so let’s focus on vacant spots. We know that people will want to pick popular choices, so we’ll use the 15 most popular species to assign trees to vacant sites.</p>
+</section>
 </section>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
-<p>Rounded proportionate spread forecasted for vacant sites.</p>
+<section id="proportionate-species-distribution-assigned-to-vacant-sites." class="level2">
+<h2 class="anchored" data-anchor-id="proportionate-species-distribution-assigned-to-vacant-sites.">Proportionate species distribution assigned to vacant sites.</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate how many times each species should be assigned to vacant_data</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>vacant_count <span class="ot">&lt;-</span> <span class="fu">nrow</span>(vacant_data)  <span class="co"># matches</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate numb of times each species should appear in vacant_data</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>top_15_counts <span class="ot">&lt;-</span> top_15_counts <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">count_vacant =</span> <span class="fu">round</span>(proportion <span class="sc">*</span> vacant_count))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vector of species names, repeated according to count_vacant</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>reassigned_data <span class="ot">&lt;-</span> <span class="fu">rep</span>(top_15_counts<span class="sc">$</span>Common.Name, top_15_counts<span class="sc">$</span>count_vacant)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Randomly shuffle the species names in vacant_reassigned_data</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">426</span>)  <span class="co"># Set the seed to ensure reproducibility</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>reassigned_data <span class="ot">&lt;-</span> <span class="fu">sample</span>(reassigned_data)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the length of vacant_reassigned_data to match vacant_data</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure it has exactly the same number of observations as vacant_data (60559)</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>reassigned_data <span class="ot">&lt;-</span> <span class="fu">sample</span>(reassigned_data, vacant_count, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace the "Common.Name" column (column 3) in vacant_data with reassigned species</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>vacant_data<span class="sc">$</span>Common.Name <span class="ot">&lt;-</span> reassigned_data</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>vacant_data <span class="sc">%&gt;%</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> </span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Editing</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Botanical.Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Common.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">DBH</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Total.Yearly.Eco.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Gallons.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Greenhouse.CO2.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Avoided..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Sequestered..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Energy.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">kWh.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Therms.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Air.Quality.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pollutants.Saved..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Property.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Leaf.Surface.Area..in.sq..ft..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Address</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Street</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Side</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Council.District</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Park.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Latitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Longitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site.ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Location</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, SILVER</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3425</td>
+<td style="text-align: left;">Main St</td>
+<td style="text-align: left;">Median</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.95915</td>
+<td style="text-align: right;">-78.81473</td>
+<td style="text-align: right;">127564</td>
+<td style="text-align: left;">(42.9591452836, -78.8147256834751)</td>
+<td style="text-align: left;">POINT (-78.8147256834751 42.9591452836)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, CRIMSON KING</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">Newport Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.95709</td>
+<td style="text-align: right;">-78.84618</td>
+<td style="text-align: right;">61278</td>
+<td style="text-align: left;">(42.957086127982926, -78.84618244385746)</td>
+<td style="text-align: left;">POINT (-78.84618244385746 42.957086127982926)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">OAK, SWAMP WHITE</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">236</td>
+<td style="text-align: left;">Edison Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.92950</td>
+<td style="text-align: right;">-78.80216</td>
+<td style="text-align: right;">78864</td>
+<td style="text-align: left;">(42.92949598228323, -78.80215920288072)</td>
+<td style="text-align: left;">POINT (-78.80215920288072 42.92949598228323)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, NORWAY</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: left;">North Park Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94683</td>
+<td style="text-align: right;">-78.85595</td>
+<td style="text-align: right;">60328</td>
+<td style="text-align: left;">(42.946828719486696, -78.8559488191159)</td>
+<td style="text-align: left;">POINT (-78.8559488191159 42.946828719486696)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, CRIMSON KING</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">277</td>
+<td style="text-align: left;">Woodbridge Av</td>
+<td style="text-align: left;">Side</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94531</td>
+<td style="text-align: right;">-78.84390</td>
+<td style="text-align: right;">69685</td>
+<td style="text-align: left;">(42.945309925, -78.8439030519)</td>
+<td style="text-align: left;">POINT (-78.8439030519 42.945309925)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>We now have reassigned the 15 most populous trees to the vacant_data dataset.</p>
+</section>
+<section id="take-totals-data-and-find-eco-value-per-tree." class="level2">
+<h2 class="anchored" data-anchor-id="take-totals-data-and-find-eco-value-per-tree.">Take totals data and find eco value per tree.</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>eco_summary <span class="ot">&lt;-</span> treeonly_data <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">3</span>])) <span class="sc">%&gt;%</span>  <span class="co"># Group by species (Common.Name)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_benefit =</span> <span class="fu">sum</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(treeonly_data)[<span class="dv">5</span>]), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),  <span class="co"># Sum of eco benefit</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">n</span>(),  <span class="co"># Occurrences of each species</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_benefit =</span> total_benefit <span class="sc">/</span> count  <span class="co"># Calculate the average ecological value</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="sc">%&gt;%</span>  <span class="co"># Sort by count</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(count, <span class="at">n =</span> <span class="dv">15</span>)  <span class="co"># Top 15 species based on count</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Display</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>eco_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 4
+   Common.Name              total_benefit count avg_benefit
+   &lt;chr&gt;                            &lt;dbl&gt; &lt;int&gt;       &lt;dbl&gt;
+ 1 MAPLE, NORWAY                 1174347.  8837       133. 
+ 2 LINDEN, LITTLELEAF             879114.  8330       106. 
+ 3 MAPLE, SILVER                  808015.  4266       189. 
+ 4 MAPLE, RED                     235416.  2390        98.5
+ 5 MAPLE, HEDGE                   221641.  2291        96.7
+ 6 MAPLE, CRIMSON KING            213066.  1795       119. 
+ 7 LILAC, IVORY SILK               39388.  1703        23.1
+ 8 HONEYLOCUST                    206061.  1539       134. 
+ 9 ELM, CHRISTINE BUISMAN         363742.  1526       238. 
+10 CRABAPPLE                       51863.  1479        35.1
+11 MAPLE, DEBORAH SCHWEDLER       152217.  1409       108. 
+12 LONDON PLANETREE               250481.  1333       188. 
+13 PEAR, CALLERY                  212454.  1268       168. 
+14 OAK, SWAMP WHITE                89763.  1221        73.5
+15 LINDEN, CRIMEAN                189780.  1205       157. </code></pre>
+</div>
+</div>
+<p>##Project environmental benefits of vacant site data replanted</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Join the eco_summary with vacant_data based on the species (Common.Name)</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>vacant_eco <span class="ot">&lt;-</span> vacant_data <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(eco_summary <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(eco_summary)[<span class="dv">1</span>]), avg_benefit), <span class="co"># Select species and avg_benefit</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"Common.Name"</span> <span class="ot">=</span> <span class="fu">names</span>(eco_summary)[<span class="dv">1</span>])) <span class="sc">%&gt;%</span>  <span class="co"># Join on species name</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="sc">!!</span><span class="fu">sym</span>(<span class="fu">names</span>(vacant_data)[<span class="dv">5</span>]) <span class="sc">:</span><span class="er">=</span> avg_benefit)  <span class="co"># Replace the 5th column with avg_benefit</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Checked data, missing lat/long</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>vacant_eco <span class="ot">&lt;-</span> vacant_eco <span class="sc">%&gt;%</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Latitude <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># View the updated vacant data with the avg_benefit in the 5th column</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>vacant_eco <span class="sc">%&gt;%</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>, <span class="st">"responsive"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Editing</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Botanical.Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Common.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">DBH</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Total.Yearly.Eco.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Stormwater.Gallons.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Greenhouse.CO2.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Avoided..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">CO2.Sequestered..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Energy.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">kWh.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Therms.Saved</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Air.Quality.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pollutants.Saved..in.lbs..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Property.Benefits....</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Leaf.Surface.Area..in.sq..ft..</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Address</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Street</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Side</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Council.District</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Park.Name</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Latitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Longitude</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site.ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Location</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">location</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">avg_benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, SILVER</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">189.40818</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3425</td>
+<td style="text-align: left;">Main St</td>
+<td style="text-align: left;">Median</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.95915</td>
+<td style="text-align: right;">-78.81473</td>
+<td style="text-align: right;">127564</td>
+<td style="text-align: left;">(42.9591452836, -78.8147256834751)</td>
+<td style="text-align: left;">POINT (-78.8147256834751 42.9591452836)</td>
+<td style="text-align: right;">189.40818</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, CRIMSON KING</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">118.69964</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: left;">Newport Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.95709</td>
+<td style="text-align: right;">-78.84618</td>
+<td style="text-align: right;">61278</td>
+<td style="text-align: left;">(42.957086127982926, -78.84618244385746)</td>
+<td style="text-align: left;">POINT (-78.84618244385746 42.957086127982926)</td>
+<td style="text-align: right;">118.69964</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">OAK, SWAMP WHITE</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">73.51569</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">236</td>
+<td style="text-align: left;">Edison Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">University</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.92950</td>
+<td style="text-align: right;">-78.80216</td>
+<td style="text-align: right;">78864</td>
+<td style="text-align: left;">(42.92949598228323, -78.80215920288072)</td>
+<td style="text-align: left;">POINT (-78.80215920288072 42.92949598228323)</td>
+<td style="text-align: right;">73.51569</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, NORWAY</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">132.88977</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: left;">North Park Av</td>
+<td style="text-align: left;">Front</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94683</td>
+<td style="text-align: right;">-78.85595</td>
+<td style="text-align: right;">60328</td>
+<td style="text-align: left;">(42.946828719486696, -78.8559488191159)</td>
+<td style="text-align: left;">POINT (-78.8559488191159 42.946828719486696)</td>
+<td style="text-align: right;">132.88977</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buffalo</td>
+<td style="text-align: left;">VACANT</td>
+<td style="text-align: left;">MAPLE, CRIMSON KING</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">118.69964</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">277</td>
+<td style="text-align: left;">Woodbridge Av</td>
+<td style="text-align: left;">Side</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Delaware</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">42.94531</td>
+<td style="text-align: right;">-78.84390</td>
+<td style="text-align: right;">69685</td>
+<td style="text-align: left;">(42.945309925, -78.8439030519)</td>
+<td style="text-align: left;">POINT (-78.8439030519 42.945309925)</td>
+<td style="text-align: right;">118.69964</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+<section id="total-ecological-benefit-increase" class="level2">
+<h2 class="anchored" data-anchor-id="total-ecological-benefit-increase">Total ecological benefit increase</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum the total ecological benefit of vacant_eco</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>total_ecological_benefit <span class="ot">&lt;-</span> <span class="fu">sum</span>(vacant_eco<span class="sc">$</span>avg_benefit, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>total_ecological_benefit <span class="ot">&lt;-</span> <span class="fu">format</span>(total_ecological_benefit, <span class="at">nsmall =</span> <span class="dv">2</span>, <span class="at">big.mark =</span> <span class="st">","</span>, <span class="at">prefix =</span> <span class="st">"$"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the total ecological benefit</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(total_ecological_benefit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "7,573,820.13"</code></pre>
+</div>
+</div>
+<p>##Let’s map the new trees!</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>vacant_eco_sf <span class="ot">&lt;-</span> vacant_eco <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"Longitude"</span>, <span class="st">"Latitude"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)  <span class="co"># Convert to sf object</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use mapview to visualize</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#map &lt;- </span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#mapview(vacant_eco_sf, zcol = "avg_benefit", legend = TRUE)</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#mapshot(map, file = "eco_map.png")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data/eco_map.png" class="img-fluid figure-img"></p>
+<figcaption>Eco map of tree points</figcaption>
+</figure>
+</div>
+</section>
 </section>
 <section id="conclusions" class="level1">
 <h1>Conclusions</h1>
+<p>Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. Assuming everyone who has a vacant slot plants a tree (distributed from top 15), by the time they reach maturity another 7,573,820.13 of ecological benefits could come from those 60,000 trees every year. It would be interesting to continue this analysis for tree canopy and localized temperature data.</p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
+<p>“Bureau of Forestry | Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry. “Figure 4.-Urban Forest Species Composition as a Percentage of All…” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064. Holtz, Yan. n.d. “Dendrogram Customization with R and Ggraph.” Accessed November 30, 2024. https://www.r-graph-gallery.com/335-custom-ggraph-dendrogram.html. “Tree Inventory | OpenData Buffalo.” n.d. Accessed December 2, 2024. https://data.buffalony.gov/Quality-of-Life/Tree-Inventory/n4ni-uuec/about_data. Ziter, Carly D., Eric J. Pedersen, Christopher J. Kucharik, and Monica G. Turner. 2019. “Scale-Dependent Interactions between Tree Canopy Cover and Impervious Surfaces Reduce Daytime Urban Heat during Summer.” Proceedings of the National Academy of Sciences 116 (15): 7575–80. https://doi.org/10.1073/pnas.1817561116.</p>
 
 
 </section>
