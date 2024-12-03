@@ -286,7 +286,7 @@ Unfortunately this webpage's server is not powerful enough to display the 60,500
 
 # References
 
-“Bureau of Forestry \| Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry. 
+- “Bureau of Forestry \| Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry. 
 
 - “Figure 4.-Urban Forest Species Composition as a Percentage of All...” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064. 
 
