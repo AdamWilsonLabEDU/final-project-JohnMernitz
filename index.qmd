@@ -1,7 +1,7 @@
 ---
 title: "Analysis of Urban Tree Cover: City of Buffalo 2024"
 author: Jack Mernitz
-subtitle: Work in Progress- 'Pay no attention to the man behind the curtain'
+subtitle: Ecological Benefits Analysis
 date: today
 date-format: long
 format:
@@ -29,12 +29,14 @@ Publicly available data from the City of Buffalo Department of Public Works: Bur
 
 ```{r, message=F, warning=F, results=F}
 install.packages("mapview")
+install.packages("webshot")
 install.packages("hrbrthemes")
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(hrbrthemes)
 library(mapview)
+library(webshot)
 library(sf)
 library(kableExtra)
 library(htmlwidgets)
@@ -60,15 +62,21 @@ tree_data %>%
 ```
 
 ## Filter out 'unsuitable vacant' and '0' sites.
+
 ```{r}
 tree_suitable <- tree_data %>%
   filter(tree_data[,2] != "unsuitable vacant")
+
 tree_filtered <- tree_suitable %>%
   filter(tree_suitable[,3] != "0")
 print(paste("The length of tree_filtered is ", nrow(tree_data) - nrow(tree_filtered), "rows smaller."))
+
+rm(tree_data)
+rm(tree_suitable)
 ```
 
 ### Resulting data split into vacant, stump, and used sites and compared.
+
 ```{r}
 stump_data <- tree_filtered %>%
   filter(tree_filtered[,2] == "STUMP")
@@ -96,6 +104,8 @@ treeonly_data %>%
   kable() %>%
   kable_styling(bootstrap_options = 
                   c("striped", "hover", "condensed", "responsive"))
+
+rm(tree_filtered)
 ```
 
 ### Species count analysis.
@@ -133,14 +143,18 @@ top_15_counts <- top_15_counts %>%
 
 portion_total <- total_count/70163
 ```
+
 ### Top 15 Species
+
 ```{r}
 print(top_15_counts)
 print(portion_total)
 ```
+
 From this, we can also see the top 15 species only make up 57.8% of the total tree count.
 
 ### Assessment of resource values by species.
+
 ```{r}
 top_eco <- treeonly_data %>%
   group_by(!!sym(names(treeonly_data)[3])) %>%  # Group by species
@@ -162,11 +176,13 @@ top_eco %>%
   xlab("Trees") +
   ylab("Benefits in Dollars")
 ```
+
 This shows the most ecologically beneficial tree species and their associated value. We'll also assume people do not want to go to the trouble of removing stumps first, so let's focus on vacant spots. We know that people will want to pick popular choices, so we'll use the 15 most popular species to assign trees to vacant sites.
 
 # Results
 
 ## Proportionate species distribution assigned to vacant sites.
+
 ```{r}
 # Calculate how many times each species should be assigned to vacant_data
 vacant_count <- nrow(vacant_data)  # matches
@@ -195,9 +211,11 @@ vacant_data %>%
   kable_styling(bootstrap_options = 
                   c("striped", "hover", "condensed", "responsive"))
 ```
+
 We now have reassigned the 15 most populous trees to the vacant_data dataset.
 
 ## Take totals data and find eco value per tree.
+
 ```{r}
 eco_summary <- treeonly_data %>%
   group_by(!!sym(names(treeonly_data)[3])) %>%  # Group by species (Common.Name)
@@ -213,6 +231,7 @@ eco_summary
 ```
 
 ##Project environmental benefits of vacant site data replanted
+
 ```{r}
 # Join the eco_summary with vacant_data based on the species (Common.Name)
 vacant_eco <- vacant_data %>%
@@ -222,7 +241,8 @@ vacant_eco <- vacant_data %>%
   mutate(!!sym(names(vacant_data)[5]) := avg_benefit)  # Replace the 5th column with avg_benefit
 
 # Checked data, missing lat/long
-vacant_eco <- vacant_eco[-12075, ]
+vacant_eco <- vacant_eco %>%
+  filter(Latitude != 0)
 
 # View the updated vacant data with the avg_benefit in the 5th column
 vacant_eco %>%
@@ -230,32 +250,38 @@ vacant_eco %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
 ## Total ecological benefit increase
+
 ```{r}
 # Sum the total ecological benefit of vacant_eco
 total_ecological_benefit <- sum(vacant_eco$avg_benefit, na.rm = TRUE)
+total_ecological_benefit <- format(total_ecological_benefit, nsmall = 2, big.mark = ",", prefix = "$")
 
 # Print the total ecological benefit
 print(total_ecological_benefit)
 
 ```
+
 ##Let's map the new trees!
+
 ```{r}
 vacant_eco_sf <- vacant_eco %>%
   st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)  # Convert to sf object
 
 # Use mapview to visualize
-mapview(vacant_eco_sf, zcol = "avg_benefit", legend = TRUE)
+#map <- 
+#mapview(vacant_eco_sf, zcol = "avg_benefit", legend = TRUE)
+
+#mapshot(map, file = "eco_map.png")
 ```
 
+![Eco map of tree points](data/eco_map.png)
 
 # Conclusions
 
-Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. Assuming everyone who has a vacant slot plants a tree (distributed from top 15), by the time they reach maturity another $7,609,962 of ecological benefits could come from those 60,000 trees every year. It would be interesting to continue this analysis for tree canopy and localized temperature data.
+Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. Assuming everyone who has a vacant slot plants a tree (distributed from top 15), by the time they reach maturity another `r total_ecological_benefit` of ecological benefits could come from those 60,000 trees every year. It would be interesting to continue this analysis for tree canopy and localized temperature data.
 
 # References
-“Bureau of Forestry | Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry.
-“Figure 4.-Urban Forest Species Composition as a Percentage of All...” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064.
-Holtz, Yan. n.d. “Dendrogram Customization with R and Ggraph.” Accessed November 30, 2024. https://www.r-graph-gallery.com/335-custom-ggraph-dendrogram.html.
-“Tree Inventory | OpenData Buffalo.” n.d. Accessed December 2, 2024. https://data.buffalony.gov/Quality-of-Life/Tree-Inventory/n4ni-uuec/about_data.
-Ziter, Carly D., Eric J. Pedersen, Christopher J. Kucharik, and Monica G. Turner. 2019. “Scale-Dependent Interactions between Tree Canopy Cover and Impervious Surfaces Reduce Daytime Urban Heat during Summer.” Proceedings of the National Academy of Sciences 116 (15): 7575–80. https://doi.org/10.1073/pnas.1817561116.
+
+“Bureau of Forestry \| Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry. “Figure 4.-Urban Forest Species Composition as a Percentage of All...” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064. Holtz, Yan. n.d. “Dendrogram Customization with R and Ggraph.” Accessed November 30, 2024. https://www.r-graph-gallery.com/335-custom-ggraph-dendrogram.html. “Tree Inventory \| OpenData Buffalo.” n.d. Accessed December 2, 2024. https://data.buffalony.gov/Quality-of-Life/Tree-Inventory/n4ni-uuec/about_data. Ziter, Carly D., Eric J. Pedersen, Christopher J. Kucharik, and Monica G. Turner. 2019. “Scale-Dependent Interactions between Tree Canopy Cover and Impervious Surfaces Reduce Daytime Urban Heat during Summer.” Proceedings of the National Academy of Sciences 116 (15): 7575–80. https://doi.org/10.1073/pnas.1817561116.
