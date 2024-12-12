@@ -1,54 +1,43 @@
 ---
-title: "My Final Project Template"
-author: Your name here
-subtitle: Subtitle here if desired
+title: "Analysis of Urban Tree Cover: City of Buffalo 2024"
+author: Jack Mernitz
+subtitle: Ecological Benefits Analysis
 date: today
 date-format: long
+format:
+  html:
+    theme: spacelab
+    toc: true
+    toc-location: left
+    toc-title: "Content Sections"
+    code-fold: true
 ---
 
 # Introduction
 
-\[\~ 200 words\]
+Trees are often overlooked as a component of urban spaces. With so much focus on the growth of infrastructure, living space, and work spaces, green places are left little room to grow. Tree leaf area coverage, while possibly annoying for lawn owners in the fall, is directly related to shade capacity and other environmental benefits of trees. Permeable surfaces where trees grow also reduce runoff, trees cool the surrounding air in sufficient density, and the mental and aesthetic benefits of green spaces in urban areas for residents and tourists are notable. Urban forestry bureaus seek to classify and present some of these benefits to the public.
 
-Clearly stated background and questions / hypotheses / problems being addressed. Sets up the analysis in an interesting and compelling way. Include figures if you like.
+Quantifying and estimating the possible value of these services in relation to tree occurrence seemed like an interesting topic to delve into. Vacant spots and stumps of former trees cannot provide benefits any longer. While an intensive endeavor to replace fully grown trees, my project seeks to enumerate how useful it could be to increase tree cover. Parsing data to assign relative values for comparable trees will assist in more accurate estimation of services. Individual versus collective benefit will also be questioned, but only after calculation of total possible benefits are complete.
 
 # Materials and methods
 
-\[\~ 200 words\]
+## The Dataset
 
-Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.
+Publicly available data from the City of Buffalo Department of Public Works: Bureau of Forestry exists as a list of tree inventory within the City proper. This includes multiple categories to represent trees' ecosystem services. Downloading and processing this data is necessary, as there are 133,229 entries in the dataset. The data is organized into 28 columns, and each row is a tree site. It is a daily updated dataset existing since 2018.
 
-Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.
+## Install and Load Packages
 
-Data: The underlying data are publicly accessible via the web and downloaded/accessed within the Rmd script. If you want to use your own data, you must make it available on a website (e.g. Figshare) so that others are able to re-run your code.
-
-You can do bullets like this:
-
--   The first most important thing
--   The second most important thing
--   The third most important thing
-
-You can do numbers like this:
-
-1.  The first most important thing
-2.  The second most important thing
-3.  The third most important thing
-
-See <http://rmarkdown.rstudio.com/> for all the amazing things you can do.
-
-Here's my first code chunk.
-
-```{r}
-x=3+4
-```
-
-Refer to output in your narrative like this: x=`r x` .
-
-Load any required packages in a code chunk (you may need to install some packages):
-
-```{r, message=F, warning=F}
+```{r, message=F, warning=F, results=F}
+install.packages("mapview")
+install.packages("webshot")
+install.packages("hrbrthemes")
 library(tidyverse)
-library(leaflet)
+library(dplyr)
+library(ggplot2)
+library(hrbrthemes)
+library(mapview)
+library(webshot)
+library(sf)
 library(kableExtra)
 library(htmlwidgets)
 library(widgetframe)
@@ -56,65 +45,253 @@ knitr::opts_chunk$set(widgetframe_widgets_dir = 'widgets' )
 knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling
 ```
 
-## Download and clean all required data
+## Downloading the required data
 
 ```{r}
-n=20
-data=data.frame(x=runif(n,-180,180),
-                y=runif(n,-60,60),
-                size = runif(n, 5, 20),
-                category = factor(
-                  sample(letters[1:5], n, replace = TRUE)
-                  ),
-                value = rnorm(n))
+tree_data <- read.csv("https://data.buffalony.gov/api/views/n4ni-uuec/rows.csv?accessType=DOWNLOAD")
 ```
+
+### A sample of how the dataset is organized.
 
 ```{r, results='asis'}
-data %>% 
-  slice(1:10) %>% #show only 1:n rows
+tree_data %>% 
+  slice(1:5) %>% #show only 1:5 rows
   kable(digits=2,align="c")%>% #make table and round to two digits
   kable_styling(bootstrap_options = 
-                  c("striped", "hover", "condensed", "responsive")) #apply other formatting
+                  c("striped", "hover", "condensed", "responsive")) 
 ```
 
-Add any additional processing steps here.
+## Filter out 'unsuitable vacant' and '0' sites.
+
+```{r}
+tree_suitable <- tree_data %>%
+  filter(tree_data[,2] != "unsuitable vacant")
+
+tree_filtered <- tree_suitable %>%
+  filter(tree_suitable[,3] != "0")
+print(paste("The length of tree_filtered is ", nrow(tree_data) - nrow(tree_filtered), "rows smaller."))
+
+rm(tree_data)
+rm(tree_suitable)
+```
+
+### Resulting data split into vacant, stump, and used sites and compared.
+
+```{r}
+stump_data <- tree_filtered %>%
+  filter(tree_filtered[,2] == "STUMP")
+
+vacant_data <- tree_filtered %>%
+  filter(tree_filtered[,2] == "VACANT")
+
+treeonly_data <- tree_filtered %>%
+  filter(!(tree_filtered[,2] %in% c("STUMP", "VACANT")))
+
+stump_data %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = 
+                  c("striped", "hover", "condensed", "responsive"))
+
+vacant_data %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = 
+                  c("striped", "hover", "condensed", "responsive"))
+
+treeonly_data %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = 
+                  c("striped", "hover", "condensed", "responsive"))
+
+rm(tree_filtered)
+```
+
+### Species count analysis.
+
+```{r fig.width=10, fig.height=6, warning=F}
+treeonly_data %>%
+  # Count occurrences of each tree species col3
+  count(!!sym(names(treeonly_data)[3])) %>% 
+  arrange(n) %>%  # Sort by count
+  top_n(15, n) %>%
+  mutate(!!names(treeonly_data)[3] := factor(!!sym(names(treeonly_data)[3]), levels = unique(!!sym(names(treeonly_data)[3])))) %>%  # Factor for ordered axis
+  ggplot(aes(x = !!sym(names(treeonly_data)[3]), y = n)) +  # Use the count (n) on the y-axis
+    geom_segment(aes(x = !!sym(names(treeonly_data)[3]), xend = !!sym(names(treeonly_data)[3]), y = 0, yend = n), color = "gray") +  # Add segments (bars)
+    geom_point(size = 3, color = "#654194") +  # Add points (dots)
+    coord_flip() +  # Flip coordinates to make the plot horizontal (lolipop graph)
+    theme_ipsum() +  # Apply hrbrthemes style
+    theme(
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.position = "none"  # Hide the legend
+    ) +
+    xlab("") 
+
+top_15_counts <- treeonly_data %>%
+  count(!!sym(names(treeonly_data)[3])) %>%
+  arrange(desc(n)) %>%  # Sort by count in descending order
+  slice_max(n, n = 15)  
+
+#sum of 15 greatest
+total_count <- sum(top_15_counts$n)
+
+# Add the proportion column
+top_15_counts <- top_15_counts %>%
+  mutate(proportion = n / total_count)
+
+portion_total <- total_count/70163
+```
+
+### Top 15 Species
+
+```{r}
+print(top_15_counts)
+print(portion_total)
+```
+
+From this, we can also see the top 15 species only make up 57.8% of the total tree count.
+
+### Assessment of resource values by species.
+
+```{r}
+top_eco <- treeonly_data %>%
+  group_by(!!sym(names(treeonly_data)[3])) %>%  # Group by species
+  summarise(total = sum(!!sym(names(treeonly_data)[5]), na.rm = TRUE)) %>%  
+  arrange(desc(total)) %>%  # Sort by total value in descending order
+  slice_max(total, n = 15)  # Keep top 15 categories by total sum
+
+# Bar graph for top totals from column 5
+top_eco %>%
+  ggplot(aes(x = !!sym(names(top_eco)[1]), y = total, fill = as.factor(!!sym(names(top_eco)[1])))) +  # Use category for x-axis and fill by category
+  geom_bar(stat = "identity") +  # Bar graph with stat = "identity" to use the actual totals
+  geom_text(aes(label = total), angle = 90, hjust = .4, size = 5) +
+  scale_y_continuous(limits = c(0, 1300000)) +
+  theme(
+    axis.text.x = element_blank(),   # Remove x-axis tick labels
+    axis.ticks.x = element_blank()   # Remove x-axis ticks
+  ) +
+  labs(fill = "Common Name", title = "Ecological Yearly Benefits of Top 15 Species") +
+  xlab("Trees") +
+  ylab("Benefits in Dollars")
+```
+
+This shows the most ecologically beneficial tree species and their associated value. We'll also assume people do not want to go to the trouble of removing stumps first, so let's focus on vacant spots. We know that people will want to pick popular choices, so we'll use the 15 most popular species to assign trees to vacant sites.
 
 # Results
 
-\[\~200 words\]
-
-Tables and figures (maps and other graphics) are carefully planned to convey the results of your analysis. Intense exploration and evidence of many trials and failures. The author looked at the data in many different ways before coming to the final presentation of the data.
-
-Show tables, plots, etc. and describe them.
-
-```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"}
-m <- leaflet(data) %>% 
-  addTiles() %>% 
-  addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %>% 
-  addPopups(~x[2], ~y[2], "Random popup")
-m  # a map with the default OSM tile layer
-```
+## Proportionate species distribution assigned to vacant sites.
 
 ```{r}
-data %>% 
-  ggplot(aes(x=x,y=y,col=category))+
-  geom_point()
+# Calculate how many times each species should be assigned to vacant_data
+vacant_count <- nrow(vacant_data)  # matches
+
+# Calculate numb of times each species should appear in vacant_data
+top_15_counts <- top_15_counts %>%
+  mutate(count_vacant = round(proportion * vacant_count))
+
+# Create a vector of species names, repeated according to count_vacant
+reassigned_data <- rep(top_15_counts$Common.Name, top_15_counts$count_vacant)
+
+# Randomly shuffle the species names in vacant_reassigned_data
+set.seed(426)  # Set the seed to ensure reproducibility
+reassigned_data <- sample(reassigned_data)
+
+# Adjust the length of vacant_reassigned_data to match vacant_data
+# Ensure it has exactly the same number of observations as vacant_data (60559)
+reassigned_data <- sample(reassigned_data, vacant_count, replace = TRUE)
+
+# Replace the "Common.Name" column (column 3) in vacant_data with reassigned species
+vacant_data$Common.Name <- reassigned_data
+
+vacant_data %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = 
+                  c("striped", "hover", "condensed", "responsive"))
 ```
 
-### Dygraphs Example
+We now have reassigned the 15 most populous trees to the vacant_data dataset.
+
+## Take totals data and find eco value per tree.
 
 ```{r}
-library(dygraphs)
-dygraph(nhtemp, main = "New Haven Temperatures") |> 
-  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01")) 
+eco_summary <- treeonly_data %>%
+  group_by(!!sym(names(treeonly_data)[3])) %>%  # Group by species (Common.Name)
+  summarise(
+    total_benefit = sum(!!sym(names(treeonly_data)[5]), na.rm = TRUE),  # Sum of eco benefit
+    count = n(),  # Occurrences of each species
+    avg_benefit = total_benefit / count  # Calculate the average ecological value
+  ) %>%
+  arrange(desc(count)) %>%  # Sort by count
+  slice_max(count, n = 15)  # Top 15 species based on count
+#Display
+eco_summary
 ```
+
+##Project environmental benefits of vacant site data replanted
+
+```{r}
+# Join the eco_summary with vacant_data based on the species (Common.Name)
+vacant_eco <- vacant_data %>%
+  left_join(eco_summary %>%
+              select(!!sym(names(eco_summary)[1]), avg_benefit), # Select species and avg_benefit
+            by = c("Common.Name" = names(eco_summary)[1])) %>%  # Join on species name
+  mutate(!!sym(names(vacant_data)[5]) := avg_benefit)  # Replace the 5th column with avg_benefit
+
+# Checked data, missing lat/long
+vacant_eco <- vacant_eco %>%
+  filter(Latitude != 0)
+
+# View the updated vacant data with the avg_benefit in the 5th column
+vacant_eco %>%
+  head(5) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+## Total ecological benefit increase
+
+```{r}
+# Sum the total ecological benefit of vacant_eco
+total_ecological_benefit <- sum(vacant_eco$avg_benefit, na.rm = TRUE)
+total_ecological_benefit <- format(total_ecological_benefit, nsmall = 2, big.mark = ",", prefix = "$")
+
+# Print the total ecological benefit
+print(total_ecological_benefit)
+
+```
+
+##Let's map the new trees!
+
+```{r}
+vacant_eco_sf <- vacant_eco %>%
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)  # Convert to sf object
+
+# Use mapview to visualize
+#map <- 
+#mapview(vacant_eco_sf, zcol = "avg_benefit", legend = TRUE)
+
+#mapshot(map, file = "eco_map.png")
+```
+
+![Eco map of tree points](data/eco_map.png)
 
 # Conclusions
 
-\[\~200 words\]
+Interesting analyses from count and total ecological benefits alone. Although higher in overall count, crabapple and planetree are not in the highest ecological benefit categories. That section is dominated by maple species. From this analysis, assuming everyone who has a vacant slot plants a tree (distributed from top 15), by the time they reach maturity another `r total_ecological_benefit` of ecological benefits could come from those 60,000 trees every year. However, that is with the assumption that all trees have the same average value, not accounting for trees of different ages or variation within species.
 
-Clear summary adequately describing the results and putting them in context. Discussion of further questions and ways to continue investigation.
+Unfortunately this webpage's server is not powerful enough to display the 60,500 points of data (arguably a dataset too large to use for this project, in hindsight). The pre-rendered map graphic is from my personal computer, captured via screenshot. Due to the randomizing of tree assignment per vacant site, the projected ecological benefits are slightly altered but remain within the $7.6 million range. It would be interesting to continue this analysis for tree canopy coverage and localized (cooled) temperature data at street level across the city.
 
 # References
 
-All sources are cited in a consistent manner
+- “Bureau of Forestry \| Buffalo, NY.” n.d. Accessed December 2, 2024. https://www.buffalony.gov/358/Bureau-of-Forestry. 
+
+- “Figure 4.-Urban Forest Species Composition as a Percentage of All...” n.d. ResearchGate. Accessed November 30, 2024. https://www.researchgate.net/figure/Urban-forest-species-composition-as-a-percentage-of-all-trees-Philadelphia-2012_fig3_321777064. 
+
+- Holtz, Yan. n.d. “Dendrogram Customization with R and Ggraph.” Accessed November 30, 2024. https://www.r-graph-gallery.com/335-custom-ggraph-dendrogram.html. 
+
+- “Tree Inventory \| OpenData Buffalo.” n.d. Accessed December 2, 2024. https://data.buffalony.gov/Quality-of-Life/Tree-Inventory/n4ni-uuec/about_data. 
+
+- Ziter, Carly D., Eric J. Pedersen, Christopher J. Kucharik, and Monica G. Turner. 2019. “Scale-Dependent Interactions between Tree Canopy Cover and Impervious Surfaces Reduce Daytime Urban Heat during Summer.” Proceedings of the National Academy of Sciences 116 (15): 7575–80. https://doi.org/10.1073/pnas.1817561116. 
